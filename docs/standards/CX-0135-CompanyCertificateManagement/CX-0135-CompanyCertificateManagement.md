@@ -96,7 +96,14 @@ We are adding the following 4 Application Programming Interfaces to remediate th
 
 **Company Certificate Request**
 
- Consumer is requesting a specific certificate to Provider. Reponse could be 200 if the certificate was found or 404 otherwise.
+ Consumer is requesting a specific certificate from Provider.
+
+
+| HTTP Code | Description                  |
+|-----------|------------------------------|
+| 200       | Certificate request accepted |
+| 400       | Request malformed            |
+
 
 `POST /companycertificate/request`
 
@@ -104,7 +111,6 @@ We are adding the following 4 Application Programming Interfaces to remediate th
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
     "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
     "receiverBpn" : "BPNL0000000002CD",
