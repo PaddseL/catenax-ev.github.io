@@ -83,12 +83,15 @@ See [API Message Flow](#215-message-flow-expectations) expectations for conforma
 > *This section and all its subsections are normative*
 
 Today, Data Consumer do not have a way to request certificates from a Data Provider. Also, Data Providers have no visibility on the status of a published certificate beyond the technical delivery. Finally, Data Providers do not have a standard mechanism to send new certificates to the Consumer when they become available.
-We are adding the following 4 Application Programming Interfaces to remediate these shortcommings:
+
+Use cases to provide certificates:
 
 - Consumer -> Provider : Company Certificate Request
-- Consumer -> Provider : Company Certificate Status (Accepted, Rejected or Received)
 - Provider -> Consumer : Company Certificate Push
-- Provider -> Consumer : Company Certificate Available
+
+Use case to give feedback for provided certificates:
+
+- Consumer -> Provider : Company Certificate Status (Accepted, Rejected or Received)
 
 ### 2.1 API Specification
 
@@ -97,12 +100,6 @@ We are adding the following 4 Application Programming Interfaces to remediate th
 **Company Certificate Request**
 
  Consumer is requesting a specific certificate from Provider.
-
-
-| HTTP Code | Description                  |
-|-----------|------------------------------|
-| 200       | Certificate request accepted |
-| 400       | Request malformed            |
 
 
 `POST /companycertificate/request`
@@ -128,6 +125,84 @@ We are adding the following 4 Application Programming Interfaces to remediate th
   }
 }
 ```
+
+Response:
+
+| HTTP Code | Description                                                          |
+|-----------|----------------------------------------------------------------------|
+| 202       | Certificate request accepted and in processing                       |
+| 200       | Certificate request processing completed (detailed response in body) |
+| 400       | Request malformed                                                    |
+
+Response Body:
+
+Case: Finished Processing and Certificate Available in EDC
+
+```json
+{
+  "header" : {
+    "senderBpn" : "BPNL0000000001AB",
+    "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
+    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "receiverBpn" : "BPNL0000000002CD",
+    "sentDateTime" : "2025-05-04T00:00:00-07:00",
+    "version" : "3.1.0"
+  },
+  "content": {
+   "documentId" : "00000000-0000-0000-0000-000000000001",
+   "requestStatus":"ACCEPTED"
+  }
+}
+```
+
+Case: Finished Processing and Certficate Request Rejected
+
+The request errors and location errors should contain all encountered problems in detail. 
+The error message is free text.
+
+```json
+{
+  "header" : {
+    "senderBpn" : "BPNL0000000001AB",
+    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
+    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "receiverBpn" : "BPNL0000000002CD",
+    "sentDateTime" : "2025-05-04T00:00:00-07:00",
+    "version" : "3.1.0"
+  },
+  "content" : {
+    "requestStatus":"REJECTED",
+    "requestErrors" : [
+      {"message":"We do not process certificates on Sunday"},
+      {"message":"Can not provide certicate for requested locations"}
+    ],
+    "locationErrors" : [
+        { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is unknown"}]}
+    ]
+  }
+}
+```
+
+Case: Certificate Reqeust Still In Process
+
+```json
+{
+  "header" : {
+    "senderBpn" : "BPNL0000000001AB",
+    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
+    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "receiverBpn" : "BPNL0000000002CD",
+    "sentDateTime" : "2025-05-04T00:00:00-07:00",
+    "version" : "3.1.0"
+  },
+  "content" : {
+    "requestStatus":"IN_PROGRESS"
+  }
+}
+```
+
 
 **Company Certificate Push**
 Certificate is pushed by the provider to the consumer. The enclosed Bpns can be a mix of sites and addresses. The consumer may want to send a subsequent GET or fetch the asset in the catalog
@@ -286,34 +361,6 @@ Certificate has been received by Consumer and validation is in progress
 }
 ```
 
-**Company Certificate Available**
-The data consumer is notified that a certificate is available. The data consumer may want to send a subsequent GET or fetch the asset from the catalog.
-
-```json
-{
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
-    "context" : "CompanyCertificateManagement-CCMAPI-Available:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
-  },
-  "content": {
-    "documentId" : "00000000-0000-0000-0000-000000000001",
-    "certificateType": "ISO9001",
-    "locationBpns" : [
-      "BPNS000000000001",
-      "BPNS000000000002",
-      "BPNS000000000003",
-      "BPNA000000000001",
-      "BPNA000000000002",
-      "BPNA000000000003"
-    ]
-  }
-}
-```
 
 #### 2.1.2 ERROR HANDLING
 
