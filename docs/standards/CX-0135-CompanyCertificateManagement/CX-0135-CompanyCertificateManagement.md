@@ -102,7 +102,7 @@ Use case to give feedback for provided certificates:
 The consumer is requesting a specific certificate from the provider.
 This request can be sent by the data consumer continuously, for updates on the request state on data provider side.
 
-![alt text](images/State%20Machine%20Data%20Provider.svg "3-Tier example of a digital twin BOM")
+![alt text](assets/State%20Machine%20Data%20Provider.svg "3-Tier example of a digital twin BOM")
 
 `POST /companycertificate/request`
 
