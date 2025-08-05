@@ -97,10 +97,12 @@ Use case to give feedback for provided certificates:
 
 #### 2.1.1 API endpoints and resources
 
-**Company Certificate Request**
+##### 2.1.1.1 Company Certificate Request
 
- Consumer is requesting a specific certificate from Provider.
+The consumer is requesting a specific certificate from the provider.
+This request can be sent by the data consumer continuously, for updates on the request state on data provider side.
 
+![alt text](images/State%20Machine%20Data%20Provider.svg "3-Tier example of a digital twin BOM")
 
 `POST /companycertificate/request`
 
@@ -115,28 +117,56 @@ Use case to give feedback for provided certificates:
     "version" : "3.1.0"
   },
   "content": {
-    "certifiedBpn" : "BPNL00000003AYRE",
-    "certificateType" : "ISO9001"
+    "certifiedBpn" : "BPNL00000003AYRE", -> *TODO* What is this exactly?
+    "certificateType" : "ISO9001",
     "locationBpns" : [ 
       "BPNA000000000001",
       "BPNA000000000002",
       "BPNS000000000003"
-    ],
+    ]
   }
 }
 ```
 
-Response:
+##### 2.1.1.1.1 HTTP Response Codes
 
-| HTTP Code | Description                                                          |
-|-----------|----------------------------------------------------------------------|
-| 202       | Certificate request accepted and in processing                       |
-| 200       | Certificate request processing completed (detailed response in body) |
-| 400       | Request malformed                                                    |
+| HTTP Code | Description                                                               |
+|-----------|---------------------------------------------------------------------------|
+| 200       | OK. Certificate request processing completed (detailed response in body). |
+| 202       | Certificate request accepted and in processing.                           |
+| 400       | Request malformed.                                                        |
+| 500       | Internal Server Error.                                                    |
 
-Response Body:
+The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
+HTTP Status Codes 202, 400 and 500 do not come with a response body.
 
-Case: Finished Processing and Certificate Available in EDC
+
+##### 2.1.1.1.2 HTTP Response Body for HTTP Code 200, Status: IN PROGRESS
+
+Case: Certificate Reqeust Still In Process
+
+```json
+{
+  "header" : {
+    "senderBpn" : "BPNL0000000001AB",
+    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
+    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "receiverBpn" : "BPNL0000000002CD",
+    "sentDateTime" : "2025-05-04T00:00:00-07:00",
+    "version" : "3.1.0"
+  },
+  "content" : {
+    "requestStatus":"IN_PROGRESS"
+  }
+}
+```
+
+##### 2.1.1.1.3 HTTP Response Body for HTTP Code 200, Status: COMPLETED
+
+Finished Processing and Certificate Available in EDC.
+The content body also provides the documentId of the certificate.
+This allows for skipping the EDC catalog search.
 
 ```json
 {
@@ -150,14 +180,15 @@ Case: Finished Processing and Certificate Available in EDC
   },
   "content": {
    "documentId" : "00000000-0000-0000-0000-000000000001",
-   "requestStatus":"ACCEPTED"
+   "requestStatus":"COMPLETED"
   }
 }
 ```
 
-Case: Finished Processing and Certficate Request Rejected
+##### 2.1.1.1.4 HTTP Response Body for HTTP Code 200, Status: REJECTED
 
-The request errors and location errors should contain all encountered problems in detail. 
+Finished Processing and Certificate Request Rejected.
+The request errors and location errors SHOULD contain all encountered problems in detail.
 The error message is free text.
 
 ```json
@@ -184,28 +215,11 @@ The error message is free text.
 }
 ```
 
-Case: Certificate Reqeust Still In Process
+##### 2.1.1.2 Company Certificate Push
 
-```json
-{
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
-    "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
-  },
-  "content" : {
-    "requestStatus":"IN_PROGRESS"
-  }
-}
-```
-
-
-**Company Certificate Push**
-Certificate is pushed by the provider to the consumer. The enclosed Bpns can be a mix of sites and addresses. The consumer may want to send a subsequent GET or fetch the asset in the catalog
+Certificate is pushed by the provider to the consumer.
+The enclosed Bpns can be a mix of sites and addresses.
+The consumer may want to send a subsequent GET or fetch the asset in the catalog.
 
 `POST /companycertificate/push`
 
@@ -254,11 +268,14 @@ Certificate is pushed by the provider to the consumer. The enclosed Bpns can be 
 }
 ```
 
-**Company Certificate Status**
+##### 2.1.1.3 Company Certificate Status
 
 `POST /companycertificate/status`
 
-**Status: Accepted**
+This API is used by the data consumer to give a response to the provided certificate, thus either accepiing or rejecting the provided certificate.
+
+##### 2.1.1.3.1 Company Certificate Status: Accepted
+
 Certificate is accepted. Document UUID should match the incoming message. The enclosed Bpns can be a mix of sites and addresses
 
 ```json
@@ -282,14 +299,15 @@ Certificate is accepted. Document UUID should match the incoming message. The en
         "BPNS000000000003",
         "BPNA000000000001",
         "BPNA000000000002",
-        "BPNA000000000003",
-    ],
+        "BPNA000000000003"
+    ]
   }
 }
 ```
 
-**Status: Rejected**
-Certificate is rejected by Consumer with multiple reasons
+##### 2.1.1.3.2 Company Certificate Status: Rejected
+
+Certificate is rejected by Consumer with one or multiple reasons.
 
 ```json
 {
@@ -321,7 +339,7 @@ Certificate is rejected by Consumer with multiple reasons
         "BPNS000000000003",
         "BPNA000000000001",
         "BPNA000000000002",
-        "BPNA000000000003",
+        "BPNA000000000003"
     ],
     "locationErrors" : [
         { "bpn":"BPNS000000000002", "locationErrors": [{"message":"Site BPNS000000000002 has been Rejected"}]},
@@ -331,8 +349,9 @@ Certificate is rejected by Consumer with multiple reasons
 }
 ```
 
-**Status: Received**
-Certificate has been received by Consumer and validation is in progress
+##### 2.1.1.3.3 Company Certificate Status: Received
+
+Certificate has been received by Consumer and validation is in progress.
 
 ```json
 {
@@ -355,12 +374,11 @@ Certificate has been received by Consumer and validation is in progress
         "BPNS000000000003",
         "BPNA000000000001",
         "BPNA000000000002",
-        "BPNA000000000003",
-    ],
+        "BPNA000000000003"
+    ]
   }
 }
 ```
-
 
 #### 2.1.2 ERROR HANDLING
 
@@ -401,7 +419,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CompanyCertificateManagementNotificationApi"
         },
         "dct:description": "Enables the Catena-X Members to send and receive Notifications in regards with the Company Certificates Data Exchange.",
-        "cx-common:version": "3.0",
+        "cx-common:version": "3.0"
     },
     "dataAddress": {},
     "@context": {
@@ -425,7 +443,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 ##### 2.1.5.1 PUSH Mechanism
 
-![PUSH Scenarios](assets/Certificate_Push.png)  
+![PUSH Scenarios](assets/Certificate_Push.png)
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Receiver via EDC (Eclipse Data Connector) components.
 The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  The certificate is then processed by the Backend Certificate Receiver, which finalizes the workflow by generating a feedback message which is pushed to the provider.
@@ -490,11 +508,11 @@ Additional more general usage policies MAY be included, but all the usage polici
 The left operand "leftOperand": "cx-policy:ContractReference" MUST be included only if such a bilateral framework contract exists.
 
 ```json
-                    {
-                        "leftOperand": "cx-policy:ContractReference",
-                        "operator": "eq",
-                        "rightOperand": "x12345"
-                    },
+            {
+                "leftOperand": "cx-policy:ContractReference",
+                "operator": "eq",
+                "rightOperand": "x12345"
+            }
 ```
 
 ## 3 ASPECT MODELS
