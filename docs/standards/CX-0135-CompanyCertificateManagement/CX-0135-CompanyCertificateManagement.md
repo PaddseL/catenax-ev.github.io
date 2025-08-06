@@ -272,7 +272,7 @@ The consumer may want to send a subsequent GET or fetch the asset in the catalog
 
 `POST /companycertificate/status`
 
-This API is used by the data consumer to give a response to the provided certificate, thus either accepiing or rejecting the provided certificate.
+This API is used by the data consumer to give a response to the provided certificate, thus either accepting or rejecting the provided certificate.
 
 ##### 2.1.1.3.1 Company Certificate Status: Accepted
 
