@@ -268,13 +268,13 @@ The consumer may want to send a subsequent GET or fetch the asset in the catalog
 }
 ```
 
-##### 2.1.1.3 Company Certificate Status
+##### 2.1.1.3 Company Certificate Feedback
 
-`POST /companycertificate/status`
+`POST /companycertificate/feedback`
 
-This API is used by the data consumer to give a response to the provided certificate, thus either accepting or rejecting the provided certificate.
+This API is used by the dataspace participant who consumes a certificate to give a feedback to the certificate provider, thus either accepting or rejecting the provided certificate. This is regardless of whether the certificate was [pushed](#2.1.1.2-Company-Certificate-Push) or [pulled](#2.1.1.1-Company-Certificate-Request).
 
-##### 2.1.1.3.1 Company Certificate Status: Accepted
+##### 2.1.1.3.1 Company Certificate Feedback: Accepted
 
 Certificate is accepted. Document UUID should match the incoming message. The enclosed Bpns can be a mix of sites and addresses
 
@@ -403,7 +403,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 | **Type**        | **Subject**                                      | **Version** | **Description**                                                                 |
 |-----------------|--------------------------------------------------|-------------|---------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementNotificationApi | 3.0         | Enables the Catena-X Members to send and receive Notifications in regards with the Company Certificates Data Exchange |
+| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementApi | 3.0         | Offers all endpoints of the Certificate Management API. For the dataspace participant who is consuming certificates the endpoints are "POST /companycertificate/request" and  "POST /companycertificate/status". |
 
 *Example:*
 
