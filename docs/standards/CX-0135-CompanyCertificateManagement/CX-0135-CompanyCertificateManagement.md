@@ -272,7 +272,7 @@ The consumer may want to send a subsequent GET or fetch the asset in the catalog
 
 `POST /companycertificate/feedback`
 
-This API is used by the dataspace participant who consumes a certificate to give a feedback to the certificate provider, thus either accepting or rejecting the provided certificate. This is regardless of whether the certificate was [pushed](#2.1.1.2-Company-Certificate-Push) or [pulled](#2.1.1.1-Company-Certificate-Request).
+This API is used by the dataspace participant who consumes a certificate to give a feedback to the certificate provider, thus either accepting or rejecting the provided certificate. This is regardless of whether the certificate was [pushed](#2112-company-certificate-push) or [pulled](#2111-company-certificate-request).
 
 ##### 2.1.1.3.1 Company Certificate Feedback: Accepted
 
