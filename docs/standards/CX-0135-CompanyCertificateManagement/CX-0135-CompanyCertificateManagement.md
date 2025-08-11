@@ -15,7 +15,8 @@ To address this issue, a use case has been developed that provides a standardize
 
 This standard is relevant to the following parties:
 
-- Data Provider and Consumer
+- Dataspace Participant who consumes certificates
+- Dataspace Participant who provides certificates
 - Business Application Provider
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
@@ -117,7 +118,7 @@ This request can be sent by the data consumer continuously, for updates on the r
     "version" : "3.1.0"
   },
   "content": {
-    "certifiedBpn" : "BPNL00000003AYRE", -> *TODO* What is this exactly?
+    "certifiedBpn" : "BPNL00000003AYRE",
     "certificateType" : "ISO9001",
     "locationBpns" : [ 
       "BPNA000000000001",
@@ -272,7 +273,7 @@ The consumer may want to send a subsequent GET or fetch the asset in the catalog
 
 `POST /companycertificate/feedback`
 
-This API is used by the dataspace participant who consumes a certificate to give a feedback to the certificate provider, thus either accepting or rejecting the provided certificate. This is regardless of whether the certificate was [pushed](#2112-company-certificate-push) or [pulled](#2111-company-certificate-request).
+This API is used by the dataspace participant who consumes a certificate to give a feedback to the certificate provider, thus either accepting or rejecting the provided certificate. This is regardless of whether the certificate was [pulled](#2111-company-certificate-request) or [pushed](#2112-company-certificate-push).
 
 ##### 2.1.1.3.1 Company Certificate Feedback: Accepted
 
@@ -403,7 +404,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 | **Type**        | **Subject**                                      | **Version** | **Description**                                                                 |
 |-----------------|--------------------------------------------------|-------------|---------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementApi | 3.0         | Offers all endpoints of the Certificate Management API. For the dataspace participant who is consuming certificates the endpoints are "POST /companycertificate/request" and  "POST /companycertificate/status". |
+| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementApi | 3.0         | Offers all endpoints of the Certificate Management API. For the dataspace participant who is consuming certificates the endpoints are [POST /companycertificate/request](#2111-company-certificate-request) and  [POST /companycertificate/feedback](#2113-company-certificate-feedback). For the dataspace participant who is providing certificates the endpoints are [POST /companycertificate/push](#2112-company-certificate-push) |
 
 *Example:*
 
