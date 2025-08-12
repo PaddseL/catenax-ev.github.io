@@ -15,8 +15,8 @@ To address this issue, a use case has been developed that provides a standardize
 
 This standard is relevant to the following parties:
 
-- Dataspace Participant who consumes certificates
-- Dataspace Participant who provides certificates
+- DPCC: Dataspace Participant who consumes certificates
+- DPPC: Dataspace Participant who provides certificates
 - Business Application Provider
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
@@ -32,12 +32,12 @@ These enhancements are designed to improve functionality and user experience, ma
 
 This standard is crucial for data providers and consumers who want to exchange company certificates through the Catena-X data space. By complying with this standard, companies can ensure seamless certificate management, thereby streamlining their overall operations.
 
-The following company certificate use cases are supported in this release, including new entries as indicated
+The following company certificate use cases are supported in this release:
 
-1. Data Provider wants to publish a certificate.
-2. (*new*) Data Consumer wants to request a certificate from a specific Data Provider
-3. (*new*) Data Consumer wants to notify a Data Provider of acceptance or rejection of a certificate published in #1 via a status message
-4. (*new*) Data Provider wants to notify a Data Consumer of the availability of a new Asset
+1. DPPC wants to publish a certificate.
+2. DPCC wants to request a certificate from a specific DPPC
+3. DPCC wants to notify a DPPC of acceptance or rejection of a certificate published in #1 via a feedback message
+4. DPPC wants to notify a DPCC of the availability of a new available certificate (a new dataspace offer)
 
 For avoidance of the doubt, we are not replacing the existing publication semantic model.
 
@@ -83,16 +83,16 @@ See [API Message Flow](#215-message-flow-expectations) expectations for conforma
 
 > *This section and all its subsections are normative*
 
-Today, Data Consumer do not have a way to request certificates from a Data Provider. Also, Data Providers have no visibility on the status of a published certificate beyond the technical delivery. Finally, Data Providers do not have a standard mechanism to send new certificates to the Consumer when they become available.
+Today, DPCC do not have a way to request certificates from a DPPC. Also, Data DPPC have no visibility on the status of a published certificate beyond the technical delivery. Finally, DPPC do not have a standard mechanism to send new certificates to the DPCC when they become available.
 
-Use cases to provide certificates:
+Use cases to provide certificates (from who initiates communication, negotiation and data transfer):
 
-- Consumer -> Provider : Company Certificate Request
-- Provider -> Consumer : Company Certificate Push
+- DPCC -> DPPC : Company Certificate Request
+- DPPC -> DPCC : Company Certificate Push
 
 Use case to give feedback for provided certificates:
 
-- Consumer -> Provider : Company Certificate Status (Accepted, Rejected or Received)
+- DPCC -> DPPC : Company Certificate Status (Accepted, Rejected or Received)
 
 ### 2.1 API Specification
 
@@ -100,8 +100,8 @@ Use case to give feedback for provided certificates:
 
 ##### 2.1.1.1 Company Certificate Request
 
-The consumer is requesting a specific certificate from the provider.
-This request can be sent by the data consumer continuously, for updates on the request state on data provider side.
+The DPCC is requesting a specific certificate from the DPPC.
+This request can be sent by the DPCC continuously, for updates on the request state on DPPC side.
 
 ![alt text](assets/State%20Machine%20Data%20Provider.svg "3-Tier example of a digital twin BOM")
 
@@ -144,7 +144,7 @@ HTTP Status Codes 202, 400 and 500 do not come with a response body.
 
 ##### 2.1.1.1.2 HTTP Response Body for HTTP Code 200, Status: IN PROGRESS
 
-Case: Certificate Reqeust Still In Process
+Case: Certificate Request Still In Process
 
 ```json
 {
@@ -218,9 +218,9 @@ The error message is free text.
 
 ##### 2.1.1.2 Company Certificate Push
 
-Certificate is pushed by the provider to the consumer.
-The enclosed Bpns can be a mix of sites and addresses.
-The consumer may want to send a subsequent GET or fetch the asset in the catalog.
+Certificate is pushed by the DPPC to the DPCC.
+The enclosed BPNs can be a mix of sites and addresses.
+The DPCC may want to send a subsequent GET or fetch the asset in the catalog.
 
 `POST /companycertificate/push`
 
@@ -277,13 +277,12 @@ This API is used by the dataspace participant who consumes a certificate to give
 
 ##### 2.1.1.3.1 Company Certificate Feedback: Accepted
 
-Certificate is accepted. Document UUID should match the incoming message. The enclosed Bpns can be a mix of sites and addresses
+Certificate is accepted. Document UUID should match the incoming message. The enclosed BPNs can be a mix of sites and addresses
 
 ```json
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
     "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
     "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
@@ -306,15 +305,14 @@ Certificate is accepted. Document UUID should match the incoming message. The en
 }
 ```
 
-##### 2.1.1.3.2 Company Certificate Status: Rejected
+##### 2.1.1.3.2 Company Certificate Feedback: Rejected
 
-Certificate is rejected by Consumer with one or multiple reasons.
+Certificate is rejected by DPCC with one or multiple reasons.
 
 ```json
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
     "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
     "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
@@ -350,15 +348,14 @@ Certificate is rejected by Consumer with one or multiple reasons.
 }
 ```
 
-##### 2.1.1.3.3 Company Certificate Status: Received
+##### 2.1.1.3.3 Company Certificate Feedback: Received
 
-Certificate has been received by Consumer and validation is in progress.
+Certificate has been received by DPCC and validation is in progress.
 
 ```json
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
     "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
     "context" : "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
@@ -398,13 +395,16 @@ The API MUST use JSON formatted data transmitted over HTTPS.
 
 > *This section is normative*
 
-The HTTP endpoints introduced in chapter 2.1.1 API endpoints and resources MUST NOT be called from a business partner directly. Rather, it MUST be called via an connector communication. Therefore, exactly one asset MUST be offered in the connector catalog.
+The HTTP endpoints introduced in chapter 2.1.1 API endpoints and resources MUST NOT be called from a business partner directly. Rather, it MUST be called via an connector communication. 
+Therefore, the DPPC MUST offer an asset to expose an API for DPCC in the connector catalog.
+In turn, the DPCC MAY offer an asset to expose an API for the DPPC in the connector catalog to push certificates to.
 
-The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of the notification API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
+The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
 
-| **Type**        | **Subject**                                      | **Version** | **Description**                                                                 |
-|-----------------|--------------------------------------------------|-------------|---------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementApi | 3.0         | Offers all endpoints of the Certificate Management API. For the dataspace participant who is consuming certificates the endpoints are [POST /companycertificate/request](#2111-company-certificate-request) and  [POST /companycertificate/feedback](#2113-company-certificate-feedback). For the dataspace participant who is providing certificates the endpoints are [POST /companycertificate/push](#2112-company-certificate-push) |
+| **Type**        | **Subject**                                 | **Version** | **Description**                                                                                                                                                         |
+|-----------------|---------------------------------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementDPPCApi | 3.0         | Offers API for the DPCC to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
+| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementDPCCApi | 3.0         | Offers API for the DPPC to [push](#2112-company-certificate-push) certificates to the DPCC.                                                                             |
 
 *Example:*
 
@@ -417,9 +417,32 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CCMAPI"
         },
         "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementNotificationApi"
+            "@id": "cx-taxo:CompanyCertificateManagementDPPCApi"
         },
-        "dct:description": "Enables the Catena-X Members to send and receive Notifications in regards with the Company Certificates Data Exchange.",
+        "dct:description": "Offers API for the DPCC to request certificates and send feedback for provided certificates.",
+        "cx-common:version": "3.0"
+    },
+    "dataAddress": {},
+    "@context": {
+        "dct": "http://purl.org/dc/terms/",
+        "cx-taxo": "https://w3id.org/catenax/taxonomy#",
+        "cx-common": "https://w3id.org/catenax/ontology/common#"
+    }
+}
+```
+
+```json
+{
+    "@id": "CCMAPI",
+    "@type": "Asset",
+    "properties": {
+        "dct:type": {
+            "@id": "cx-taxo:CCMAPI"
+        },
+        "dct:subject": {
+            "@id": "cx-taxo:CompanyCertificateManagementDPCCApi"
+        },
+        "dct:description": " Offers API for the DPPC to push certificates to the DPCC.",
         "cx-common:version": "3.0"
     },
     "dataAddress": {},
@@ -433,14 +456,14 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 #### 2.1.5 MESSAGE FLOW EXPECTATIONS
 
-- Data Provider MUST expose company certificates in their catalog when using pull mechanism.
-- Data Provider MUST set the correct access policy on the certificate asset to allow consumption by Consumer(s) when using pull mechanism.
-- Data Consumer MUST set the correct access policy on the notification policy to allow the exchange of data by provider when using push mechanism.
-- Data Consumer MAY send a certificate request via POST /companycertificate which MAY be replied to by the Data Provider.
-- Data Consumer MAY send a notification of acceptance or rejection via POST /companycertificate/status. Provider MAY process this message to trigger further processing.
-- Business Application Provider MUST implement the feature that allows to send a notification of acceptance or rejection via POST /companycertificate/status.
-- Data Consumer MAY send a notification of reception when the certificate validation has started.
-- Data Provider MAY send a certificate availability notification when a new certificate has been published in the EDC catalog. Data Consumer SHOULD get the new certificate via the pull data exchange mechanism.
+- DPPC MUST expose company certificates in their catalog when using pull mechanism.
+- DPPC MUST set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using pull mechanism.
+- DPCC MUST set the correct access policy on the certificate offer to allow the exchange of data by provider when using push mechanism.
+- DPCC MAY send a certificate request via POST /companycertificate/request which MUST be replied to by the DPPC according to the endpoint definitions.
+- DPCC MAY send a notification of acceptance or rejection via POST /companycertificate/feedback. Provider MAY process this message to trigger further processing.
+- DPCC MAY have a DPCC API to push certificates to.
+- Business Application Provider MUST implement all features of the DPPC API.
+- Business Application Provider MUST implement a push mechanism if the DPCC has an DPCC API.
 
 ##### 2.1.5.1 PUSH Mechanism
 
