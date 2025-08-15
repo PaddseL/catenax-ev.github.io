@@ -15,8 +15,8 @@ To address this issue, a use case has been developed that provides a standardize
 
 This standard is relevant to the following parties:
 
-- DPCC: Dataspace Participant who consumes certificates
-- DPPC: Dataspace Participant who provides certificates
+- Certificate Receiver: Dataspace Participant who consumes certificates
+- Certificate Distributor: Dataspace Participant who provides certificates
 - Business Application Provider
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
@@ -34,10 +34,10 @@ This standard is crucial for data providers and consumers who want to exchange c
 
 The following company certificate use cases are supported in this release:
 
-1. DPPC wants to publish a certificate.
-2. DPCC wants to request a certificate from a specific DPPC
-3. DPCC wants to notify a DPPC of acceptance or rejection of a certificate published in #1 via a feedback message
-4. DPPC wants to notify a DPCC of the availability of a new available certificate (a new dataspace offer)
+1. Certificate Distributor wants to publish a certificate.
+2. Certificate Receiver wants to request a certificate from a specific Certificate Distributor
+3. Certificate Receiver wants to notify a Certificate Distributor of acceptance or rejection of a certificate published in #1 via a feedback message
+4. Certificate Distributor wants to notify a Certificate Receiver of the availability of a new available certificate (a new dataspace offer)
 
 For avoidance of the doubt, we are not replacing the existing publication semantic model.
 
@@ -83,16 +83,16 @@ See [API Message Flow](#215-message-flow-expectations) expectations for conforma
 
 > *This section and all its subsections are normative*
 
-Today, DPCC do not have a way to request certificates from a DPPC. Also, Data DPPC have no visibility on the status of a published certificate beyond the technical delivery. Finally, DPPC do not have a standard mechanism to send new certificates to the DPCC when they become available.
+Today, Certificate Receiver do not have a way to request certificates from a Certificate Distributor. Also, Data Certificate Distributor have no visibility on the status of a published certificate beyond the technical delivery. Finally, Certificate Distributor do not have a standard mechanism to send new certificates to the Certificate Receiver when they become available.
 
 Use cases to provide certificates (from who initiates communication, negotiation and data transfer):
 
-- DPCC -> DPPC : Company Certificate Request
-- DPPC -> DPCC : Company Certificate Push
+- Certificate Receiver -> Certificate Distributor : Company Certificate Request
+- Certificate Distributor -> Certificate Receiver : Company Certificate Push
 
 Use case to give feedback for provided certificates:
 
-- DPCC -> DPPC : Company Certificate Status (Accepted, Rejected or Received)
+- Certificate Receiver -> Certificate Distributor : Company Certificate Status (Accepted, Rejected or Received)
 
 ### 2.1 API Specification
 
@@ -100,10 +100,10 @@ Use case to give feedback for provided certificates:
 
 ##### 2.1.1.1 Company Certificate Request
 
-The DPCC is requesting a specific certificate from the DPPC.
-This request can be sent by the DPCC continuously, for updates on the request state on DPPC side.
+The Certificate Receiver is requesting a specific certificate from the Certificate Distributor.
+This request can be sent by the Certificate Receiver continuously, for updates on the request state on Certificate Distributor side.
 
-![alt text](assets/State%20Machine%20DPPC.svg "3-Tier example of a digital twin BOM")
+![alt text](assets/State%20Machine%20Certificate Distributor.svg "3-Tier example of a digital twin BOM")
 
 `POST /companycertificate/request`
 
@@ -218,9 +218,9 @@ The error message is free text.
 
 ##### 2.1.1.2 Company Certificate Push
 
-Certificate is pushed by the DPPC to the DPCC.
+Certificate is pushed by the Certificate Distributor to the Certificate Receiver.
 The enclosed BPNs can be a mix of sites and addresses.
-The DPCC may want to send a subsequent GET or fetch the asset in the catalog.
+The Certificate Receiver may want to send a subsequent GET or fetch the asset in the catalog.
 
 `POST /companycertificate/push`
 
@@ -228,7 +228,6 @@ The DPCC may want to send a subsequent GET or fetch the asset in the catalog.
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/api",
     "context" : "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
     "receiverBpn" : "BPNL0000000002CD",
@@ -307,7 +306,7 @@ Certificate is accepted. Document UUID should match the incoming message. The en
 
 ##### 2.1.1.3.2 Company Certificate Feedback: Rejected
 
-Certificate is rejected by DPCC with one or multiple reasons.
+Certificate is rejected by Certificate Receiver with one or multiple reasons.
 
 ```json
 {
@@ -350,7 +349,7 @@ Certificate is rejected by DPCC with one or multiple reasons.
 
 ##### 2.1.1.3.3 Company Certificate Feedback: Received
 
-Certificate has been received by DPCC and validation is in progress.
+Certificate has been received by Certificate Receiver and validation is in progress.
 
 ```json
 {
@@ -396,17 +395,17 @@ The API MUST use JSON formatted data transmitted over HTTPS.
 > *This section is normative*
 
 The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) MUST NOT be called from a business partner directly. Rather, it MUST be called via a connector communication.
-Therefore, the DPPC MUST offer an asset to expose an API for DPCC in the connector catalog.
-In turn, the DPCC MAY offer an asset to expose an API for the DPPC in the connector catalog to push certificates to.
+Therefore, the Certificate Distributor MUST offer an asset to expose an API for Certificate Receiver in the connector catalog.
+In turn, the Certificate Receiver MAY offer an asset to expose an API for the Certificate Distributor in the connector catalog to push certificates to.
 
 The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
 
-| **Type**        | **Subject**                                 | **Version** | **Description**                                                                                                                                                                |
-|-----------------|---------------------------------------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementDPPCApi | 3.0         | Offers *DPPC API* for the DPCC to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
-| cx-taxo:CCMAPI  | cx-taxo:CompanyCertificateManagementDPCCApi | 3.0         | Offers *DPCC API* for the DPPC to [push](#2112-company-certificate-push) certificates to the DPCC.                                                                             |
+| **Type**       | **Subject**                              | **Version** | **Description**                                                                                                                                                                                                   |
+|----------------|------------------------------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateDistributorApi | 3.0         | Offers *Certificate Distributor API* for the Certificate Receiver to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateReceiverApi    | 3.0         | Offers *Certificate Receiver API* for the Certificate Distributor to [push](#2112-company-certificate-push) certificates to the Certificate Receiver.                                                             |
 
-*Example DPPC API:*
+*Example Certificate Distributor API:*
 ```json
 {
     "@id": "CCMAPI",
@@ -416,9 +415,9 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CCMAPI"
         },
         "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementDPPCApi"
+            "@id": "cx-taxo:CompanyCertificateManagementCertificate DistributorApi"
         },
-        "dct:description": "Offers API for the DPCC to request certificates and send feedback for provided certificates.",
+        "dct:description": "Offers API for the Certificate Receiver to request certificates and send feedback for provided certificates.",
         "cx-common:version": "3.0"
     },
     "dataAddress": {},
@@ -430,7 +429,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 }
 ```
 
-*Example DPCC API:*
+*Example Certificate Receiver API:*
 ```json
 {
     "@id": "CCMAPI",
@@ -440,9 +439,9 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CCMAPI"
         },
         "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementDPCCApi"
+            "@id": "cx-taxo:CompanyCertificateManagementCertificate ReceiverApi"
         },
-        "dct:description": " Offers API for the DPPC to push certificates to the DPCC.",
+        "dct:description": " Offers API for the Certificate Distributor to push certificates to the Certificate Receiver.",
         "cx-common:version": "3.0"
     },
     "dataAddress": {},
@@ -456,19 +455,20 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 #### 2.1.5 MESSAGE FLOW EXPECTATIONS
 
-DPPC (Dataspace Participant who Provides Certificates) & DPCC (Dataspace Participant who Consumes Certificates):
-- DPPC MUST expose company certificates in their catalog when using the pull mechanism.
-- DPPC MUST set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
+Certificate Distributor (Dataspace Participant who Provides Certificates) & Certificate Receiver (Dataspace Participant who Consumes Certificates):
+- Certificate Distributor MUST expose company certificates in their catalog when using the pull mechanism.
+- Certificate Distributor MUST set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
 
 
-- DPCC MAY offer a DPCC API for the DPPC to push certificates to, but MUST set the correct access policy on the offer, when chosing to do so.
-- DPCC MAY send a certificate request via POST /companycertificate/request which MUST be replied to by the DPPC according to the endpoint definitions.
-- DPCC MAY send a notification of acceptance or rejection via POST /companycertificate/feedback. DPPC MAY process this message to trigger further processing.
+- Certificate Receiver MAY offer a Certificate Receiver API for the Certificate Distributor to push certificates to, but MUST set the correct access policy on the offer, when chosing to do so.
+- Certificate Receiver MAY send a certificate request via POST /companycertificate/request which MUST be replied to by the Certificate Distributor according to the endpoint definitions.
+- Certificate Receiver MAY send a notification of acceptance or rejection via POST /companycertificate/feedback. 
+Certificate Distributor MUST respond according to the [error handling](#212-error-handling).
 
 Business Application Provider:
-- Business Application Provider MUST implement all features of the DPPC API, including both the pull, and the feedback mechanism.
-- Business Application Provider MUST implement all features of the DPCC API, for supporting the push mechanism.
-- Business Application Provider MUST offer the push mechanism option to the DPCC application user, if the DPCC supports the push mechanism.
+- Business Application Provider MUST implement all features of the Certificate Distributor API, including both the pull, and the feedback mechanism.
+- Business Application Provider MUST implement all features of the Certificate Receiver API, for supporting the push mechanism.
+- Business Application Provider MUST offer the push mechanism option to the Certificate Receiver application user, if the Certificate Receiver supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
 
