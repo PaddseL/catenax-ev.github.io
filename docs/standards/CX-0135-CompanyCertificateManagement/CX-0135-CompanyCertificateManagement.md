@@ -103,7 +103,7 @@ Use case to give feedback for provided certificates:
 The Certificate Receiver is requesting a specific certificate from the Certificate Distributor.
 This request can be sent by the Certificate Receiver continuously, for updates on the request state on Certificate Distributor side.
 
-![alt text](assets/State%20Machine%20Certificate Distributor.svg "3-Tier example of a digital twin BOM")
+![alt text](assets/State%20Machine%20Certificate%20Distributor.svg "3-Tier example of a digital twin BOM")
 
 `POST /companycertificate/request`
 
@@ -415,7 +415,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CCMAPI"
         },
         "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementCertificate DistributorApi"
+            "@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi"
         },
         "dct:description": "Offers API for the Certificate Receiver to request certificates and send feedback for provided certificates.",
         "cx-common:version": "3.0"
@@ -439,7 +439,7 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
             "@id": "cx-taxo:CCMAPI"
         },
         "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementCertificate ReceiverApi"
+            "@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi"
         },
         "dct:description": " Offers API for the Certificate Distributor to push certificates to the Certificate Receiver.",
         "cx-common:version": "3.0"
@@ -455,15 +455,15 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 
 #### 2.1.5 MESSAGE FLOW EXPECTATIONS
 
-Certificate Distributor (Dataspace Participant who Provides Certificates) & Certificate Receiver (Dataspace Participant who Consumes Certificates):
+Certificate Distributor & Certificate Receiver:
 - Certificate Distributor MUST expose company certificates in their catalog when using the pull mechanism.
 - Certificate Distributor MUST set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
 
 
 - Certificate Receiver MAY offer a Certificate Receiver API for the Certificate Distributor to push certificates to, but MUST set the correct access policy on the offer, when chosing to do so.
 - Certificate Receiver MAY send a certificate request via POST /companycertificate/request which MUST be replied to by the Certificate Distributor according to the endpoint definitions.
-- Certificate Receiver MAY send a notification of acceptance or rejection via POST /companycertificate/feedback. 
-Certificate Distributor MUST respond according to the [error handling](#212-error-handling).
+- Certificate Receiver MAY send a notification of acceptance or rejection via POST /companycertificate/feedback.
+  Certificate Distributor MUST respond according to the [error handling](#212-error-handling).
 
 Business Application Provider:
 - Business Application Provider MUST implement all features of the Certificate Distributor API, including both the pull, and the feedback mechanism.
@@ -538,10 +538,10 @@ The left operand "leftOperand": "cx-policy:ContractReference" MUST be included o
 
 ```json
             {
-                "leftOperand": "cx-policy:ContractReference",
-                "operator": "eq",
-                "rightOperand": "x12345"
-            }
+  "leftOperand": "cx-policy:ContractReference",
+  "operator": "eq",
+  "rightOperand": "x12345"
+}
 ```
 
 ## 3 ASPECT MODELS
