@@ -419,7 +419,7 @@ The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#21
 Therefore, the Certificate Distributor MUST offer an asset to expose an API for Certificate Receiver in the connector catalog.
 In turn, the Certificate Receiver MAY offer an asset to expose an API for the Certificate Distributor in the connector catalog to push certificates to.
 
-The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
+The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
 
 | **Type**       | **Subject**                              | **Version** | **Description**                                                                                                                                                                                                   |
 |----------------|------------------------------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
