@@ -19,6 +19,10 @@ This standard is relevant to the following parties:
 - Certificate Distributor: Dataspace Participant who provides certificates
 - Business Application Provider
 
+```
+### Description why not using provider and consumer
+```
+
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
 
 The updated standard introduces several enhancements over the previous version. One of the key changes is the definition of an OpenAPI. This will allow companies to proactively request certificates and provide feedback on their status. For the notification's requests, the Industry Core Standard (CX-0151 Industry Core: Basics v.1.0.0) has been adopted.
@@ -138,6 +142,12 @@ This request can be sent by the Certificate Receiver continuously, for updates o
 | 400       | Request malformed.                                                        |
 | 500       | Internal Server Error.                                                    |
 
+```
+EDC at the moment will always proxy a 500 internal server error when encountering a non 2xx HTTP response code.
+This means for malformed request the API should return a 400 Status code but the final EDC response at the consumer will still be 500.
+Until a future EDC update changes this behaviour to proxy all status codes without changes.
+```
+
 The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
 HTTP Status Codes 202, 400 and 500 do not come with a response body.
 
@@ -228,6 +238,7 @@ The Certificate Receiver may want to send a subsequent GET or fetch the asset in
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp", 
     "context" : "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
     "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
     "receiverBpn" : "BPNL0000000002CD",
@@ -266,6 +277,14 @@ The Certificate Receiver may want to send a subsequent GET or fetch the asset in
     }
   }
 }
+```
+
+```
+The ´senderFeedbackUrl´ should specify where the Certficate Distributor expects the feedback of the Certificate Receiver.
+The expected value is a concrete path to the V1 dataspace protocol endpoint as specified in the example above.
+This is intended to be a temporary solution for supporting multiple feedback endpoints.
+The typical way would be to provide additional attributes to the EDC offers in order to differentiate.
+Since the current changes are in scope of a non-breaking standard patch the `senderFeedbackUrl` stays as an intermediate solution.
 ```
 
 ##### 2.1.1.3 Company Certificate Feedback
