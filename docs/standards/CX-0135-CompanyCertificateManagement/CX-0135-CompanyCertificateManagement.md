@@ -19,9 +19,11 @@ This standard is relevant to the following parties:
 - Certificate Distributor: Dataspace Participant who provides certificates
 - Business Application Provider
 
-```
-### Description why not using provider and consumer
-```
+>**Reasoning behind the naming of involved parties in this standard:**
+>The Catena-X operating model, as well as the EDC, uses the terms `Data Consumer` and `Data Provider`.
+>The EDC uses these terms in regard to the parties that offer and consume EDC assets, while the operating model uses them in the context of information flow. 
+>In some cases, these understandings align, but, for example, in the case of APIs (especially the certificate push mechanism), a mismatch can occur between the two. 
+>To avoid misunderstandings, we use the terms `Certificate Receiver` and `Certificate Distributor` to explicitly prevent this ambiguity.
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
 
@@ -142,11 +144,10 @@ This request can be sent by the Certificate Receiver continuously, for updates o
 | 400       | Request malformed.                                                        |
 | 500       | Internal Server Error.                                                    |
 
-```
-EDC at the moment will always proxy a 500 internal server error when encountering a non 2xx HTTP response code.
-This means for malformed request the API should return a 400 Status code but the final EDC response at the consumer will still be 500.
-Until a future EDC update changes this behaviour to proxy all status codes without changes.
-```
+>**EDC Behavior**:
+>At the moment (standard release 25.09), the open-source EDC will always proxy a `500` internal server error when it encounters a `4xx` or `5xx` HTTP response code from the API. 
+>This means that in the case of a malformed request, while the API should return a `400` status code, the final EDC response that the consumer receives will be `500`. 
+>Until a future EDC update changes this behavior to proxy all status codes without changes, applications will need to be able to deal with this technical reality.
 
 The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
 HTTP Status Codes 202, 400 and 500 do not come with a response body.
@@ -278,14 +279,15 @@ The Certificate Receiver may want to send a subsequent GET or fetch the asset in
   }
 }
 ```
+The ´senderFeedbackUrl´ specifies, where the Certificate Distributor expects the feedback of the Certificate Receiver.
+The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint (as specified in the example above),
+where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Receiver.
 
-```
-The ´senderFeedbackUrl´ should specify where the Certficate Distributor expects the feedback of the Certificate Receiver.
-The expected value is a concrete path to the V1 dataspace protocol endpoint as specified in the example above.
-This is intended to be a temporary solution for supporting multiple feedback endpoints.
-The typical way would be to provide additional attributes to the EDC offers in order to differentiate.
-Since the current changes are in scope of a non-breaking standard patch the `senderFeedbackUrl` stays as an intermediate solution.
-```
+>**Push header `senderFeedbackUrl` explanation**: 
+>This information is intended as a temporary solution to support the unique identification of multiple feedback endpoints across multiple EDCs belonging to one legal entity. 
+>The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs. 
+>Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution. 
+>A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
 
 ##### 2.1.1.3 Company Certificate Feedback
 
@@ -312,12 +314,12 @@ Certificate is accepted. Document UUID should match the incoming message. The en
     "documentId" : "00000000-0000-0000-0000-000000000001",
     "certificateStatus":"ACCEPTED",
     "locationBpns" : [
-        "BPNS000000000001",
-        "BPNS000000000002",
-        "BPNS000000000003",
-        "BPNA000000000001",
-        "BPNA000000000002",
-        "BPNA000000000003"
+      "BPNS000000000001",
+      "BPNS000000000002",
+      "BPNS000000000003",
+      "BPNA000000000001",
+      "BPNA000000000002",
+      "BPNA000000000003"
     ]
   }
 }
@@ -351,16 +353,16 @@ Certificate is rejected by Certificate Receiver with one or multiple reasons.
       {"message":"Unknown BPNL000000000000"}
     ],
     "locationBpns" : [
-        "BPNS000000000001",
-        "BPNS000000000002",
-        "BPNS000000000003",
-        "BPNA000000000001",
-        "BPNA000000000002",
-        "BPNA000000000003"
+      "BPNS000000000001",
+      "BPNS000000000002",
+      "BPNS000000000003",
+      "BPNA000000000001",
+      "BPNA000000000002",
+      "BPNA000000000003"
     ],
     "locationErrors" : [
-        { "bpn":"BPNS000000000002", "locationErrors": [{"message":"Site BPNS000000000002 has been Rejected"}]},
-        { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is missing"}]}
+      { "bpn":"BPNS000000000002", "locationErrors": [{"message":"Site BPNS000000000002 has been Rejected"}]},
+      { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is missing"}]}
     ]
   }
 }
@@ -385,12 +387,12 @@ Certificate has been received by Certificate Receiver and validation is in progr
     "documentId" : "00000000-0000-0000-0000-000000000002",
     "certificateStatus":"RECEIVED",
     "locationBpns" : [
-        "BPNS000000000001",
-        "BPNS000000000002",
-        "BPNS000000000003",
-        "BPNA000000000001",
-        "BPNA000000000002",
-        "BPNA000000000003"
+      "BPNS000000000001",
+      "BPNS000000000002",
+      "BPNS000000000003",
+      "BPNA000000000001",
+      "BPNA000000000002",
+      "BPNA000000000003"
     ]
   }
 }
@@ -427,48 +429,48 @@ The property [[type]](http://purl.org/dc/terms/type) MUST reference the name of 
 *Example Certificate Distributor API:*
 ```json
 {
-    "@id": "CCMAPI",
-    "@type": "Asset",
-    "properties": {
-        "dct:type": {
-            "@id": "cx-taxo:CCMAPI"
-        },
-        "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi"
-        },
-        "dct:description": "Offers API for the Certificate Receiver to request certificates and send feedback for provided certificates.",
-        "cx-common:version": "3.0"
+  "@id": "CCMAPI",
+  "@type": "Asset",
+  "properties": {
+    "dct:type": {
+      "@id": "cx-taxo:CCMAPI"
     },
-    "dataAddress": {},
-    "@context": {
-        "dct": "http://purl.org/dc/terms/",
-        "cx-taxo": "https://w3id.org/catenax/taxonomy#",
-        "cx-common": "https://w3id.org/catenax/ontology/common#"
-    }
+    "dct:subject": {
+      "@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi"
+    },
+    "dct:description": "Offers API for the Certificate Receiver to request certificates and send feedback for provided certificates.",
+    "cx-common:version": "3.0"
+  },
+  "dataAddress": {},
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "cx-taxo": "https://w3id.org/catenax/taxonomy#",
+    "cx-common": "https://w3id.org/catenax/ontology/common#"
+  }
 }
 ```
 
 *Example Certificate Receiver API:*
 ```json
 {
-    "@id": "CCMAPI",
-    "@type": "Asset",
-    "properties": {
-        "dct:type": {
-            "@id": "cx-taxo:CCMAPI"
-        },
-        "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi"
-        },
-        "dct:description": " Offers API for the Certificate Distributor to push certificates to the Certificate Receiver.",
-        "cx-common:version": "3.0"
+  "@id": "CCMAPI",
+  "@type": "Asset",
+  "properties": {
+    "dct:type": {
+      "@id": "cx-taxo:CCMAPI"
     },
-    "dataAddress": {},
-    "@context": {
-        "dct": "http://purl.org/dc/terms/",
-        "cx-taxo": "https://w3id.org/catenax/taxonomy#",
-        "cx-common": "https://w3id.org/catenax/ontology/common#"
-    }
+    "dct:subject": {
+      "@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi"
+    },
+    "dct:description": " Offers API for the Certificate Distributor to push certificates to the Certificate Receiver.",
+    "cx-common:version": "3.0"
+  },
+  "dataAddress": {},
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "cx-taxo": "https://w3id.org/catenax/taxonomy#",
+    "cx-common": "https://w3id.org/catenax/ontology/common#"
+  }
 }
 ```
 
