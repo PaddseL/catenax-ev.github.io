@@ -428,6 +428,23 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 | cx-taxo:CCMAPI | cx-taxo:CompanyCertificateDistributorApi | 3.0         | Offers *Certificate Provider API* for the Certificate Consumer to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
 | cx-taxo:CCMAPI | cx-taxo:CompanyCertificateReceiverApi    | 3.0         | Offers *Certificate Consumer API* for the Certificate Provider to [push](#2112-company-certificate-push) certificates to the Certificate Consumer.                                                             |
 
+There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
+
+*Example*: it is possible to have these assets available next to one-another:
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```, and 
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "2.0"}```, as well as
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi", "cx-common:version": "3.0"}```,
+
+since they either differ in the value of the version or the subject. But it would not be possible to have two of the same subject and the same version.
+
+*Example that is not allowed:*
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```
+
+It doesn't matter if the assets are offered in one or in different connectors, as long as they belong to the same BPNL this is not allowed.
+
+
+
 *Example Certificate Provider API:*
 ```json
 {
