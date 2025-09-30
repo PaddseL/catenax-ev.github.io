@@ -23,36 +23,35 @@ components:
       properties:
         senderBpn:
           type: string
-          description: The BPNL of the legal entity which send this request !ToDo!(At the moment this is trivial but with the introduction of managed companies it is unclear whether the description is still acurate)
+          description: The BPNL of the legal entity which send this request
           examples:
             - "BPNL0000000001AB"
         messageId:
           type: string
           format: uuid
-          description: Identifier for this specific request being sent !ToDo!(This seems to be just for the incoming message. Why not also an identifier for the actual ongoing use case process?)
+          description: Identifier for this specific request being sent
           examples:
             - "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
         context:
           type: string
-          description: The type of use case this request belongs to !ToDo!(Why is that necessary? It should be clear based on the request itself. This only introduces room for bugs and misunderstandings)
+          description: The type of use case this request belongs to
           enum:
             - "CompanyCertificateManagement-CCMAPI-Push:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
         receiverBpn:
           type: string
-          description: The intended receiver legal entity BPNL of this request !ToDo!(Similar to the sender, in a world with managed companies what is the expectation for this field?)
+          description: The intended receiver legal entity BPNL of this request
           examples:
             - "BPNL0000000002CD"
         sentDateTime:
           type: string
-          description: The full time and date with timezone on when this request has been sent by the sender !ToDo!(timezone was not specified before)
+          description: The full time and date with timezone on when this request has been sent by the sender
           format: date-time
           examples:
             - "2025-05-04T00:00:00-07:00Z"
         version:
           type: string
-          description: "!ToDo!(The version of what exactly?)"
           examples:
             - "3.1.0"
 
@@ -217,7 +216,6 @@ components:
             - type
             - registrationNumber
             - validFrom
-            - validUntil
             - trustLevel
             - document
           properties:
@@ -235,7 +233,7 @@ components:
               description: Details on which areas / application types a certificate is valid for a company and/or site.
             enclosedSites:
               type: array
-              description: "Additional sites covered by the certificate, which can be either the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA) !ToDo!(Why is it called site then? And in the other requests such attribute is called location. Very misleading)"
+              description: "Additional sites covered by the certificate, which can be either the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA)"
               items:
                 $ref: "#/components/schemas/EnclosedSite"
             validFrom:
@@ -245,7 +243,7 @@ components:
             validUntil:
               type: string
               format: date
-              description: Valid valid until as defined on the certificate. If certificate never expires value until expected to be 9999-12-31 !ToDo!(Where does that convention come from? Why not just make it null?)
+              description: Valid valid until as defined on the certificate
             issuer:
               description: The issuing authority e.g. TUEV Sued
               $ref: "#/components/schemas/Issuer"
