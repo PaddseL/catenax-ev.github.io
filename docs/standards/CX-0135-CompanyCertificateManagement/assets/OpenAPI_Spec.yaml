@@ -1,0 +1,590 @@
+openapi: 3.1.0
+info:
+  title: Company Certificate Notification API
+  description: API for requesting and accepting company certificates
+  version: 1.0.0
+tags:
+  - name: Certificate Provider
+    description: API endpoints offered by the Certificate Provider
+  - name: Certificate Consumer
+    description: API endpoints offered by the Certificate Consumer
+
+components:
+  schemas:
+    Header:
+      type: object
+      required:
+        - senderBpn
+        - context
+        - messageId
+        - receiverBpn
+        - sentDateTime
+        - version
+      properties:
+        senderBpn:
+          type: string
+          description: The BPNL of the legal entity which send this request !ToDo!(At the moment this is trivial but with the introduction of managed companies it is unclear whether the description is still acurate)
+          examples:
+            - "BPNL0000000001AB"
+        messageId:
+          type: string
+          format: uuid
+          description: Identifier for this specific request being sent !ToDo!(This seems to be just for the incoming message. Why not also an identifier for the actual ongoing use case process?)
+          examples:
+            - "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+        context:
+          type: string
+          description: The type of use case this request belongs to !ToDo!(Why is that necessary? It should be clear based on the request itself. This only introduces room for bugs and misunderstandings)
+          enum:
+            - "CompanyCertificateManagement-CCMAPI-Push:1.0.0"
+            - "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
+            - "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+        receiverBpn:
+          type: string
+          description: The intended receiver legal entity BPNL of this request !ToDo!(Similar to the sender, in a world with managed companies what is the expectation for this field?)
+          examples:
+            - "BPNL0000000002CD"
+        sentDateTime:
+          type: string
+          description: The full time and date with timezone on when this request has been sent by the sender !ToDo!(timezone was not specified before)
+          format: date-time
+          examples:
+            - "2025-05-04T00:00:00-07:00Z"
+        version:
+          type: string
+          description: "!ToDo!(The version of what exactly?)"
+          examples:
+            - "3.1.0"
+
+    FeedbackUrlHeader:
+      allOf:
+        - $ref: '#/components/schemas/Header'
+        - type: object
+          properties:
+            senderFeedbackUrl:
+              type: string
+              description: The DSP URL from where the sender of the request expectes to receive feedback
+              examples:
+                - "https://domain.tld/path/to/edc/api/v1/dsp"
+
+
+    CertificateRequest:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          type: object
+          required:
+            - certifiedBpn
+            - certificateType
+          properties:
+            certifiedBpn:
+              type: string
+              description: The BPNL of the legal entity for which the requested certificate has been issued
+              pattern: "^BPNL[A-Z0-9]{12}$"
+              examples:
+                - "BPNL0000000002CD"
+            certificateType:
+              type: string
+              description: The type of certificate the certificate consumer requests
+              examples:
+                - "ISO9001"
+            locationBpns:
+              type: array
+              description: The BPNs of the site or address locations for which the certificate consumer requests the certificate
+              items:
+                $ref: '#/components/schemas/BpnLocation'
+
+
+
+    CertificateRequestFinishedResponse:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          oneOf:
+            - $ref: '#/components/schemas/CertificateRequestCompletedResponseContent'
+            - $ref: '#/components/schemas/CertificateRequestRejectedResponseContent'
+          discriminator:
+            propertyName: requestStatus
+
+    CertificateRequestInProgressResponse:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          type: object
+          required:
+            - requestStatus
+          properties:
+            requestStatus:
+              type: string
+              description: The processing status in which the certificate request process is currently in
+              const: "IN_PROGRESS"
+
+    CertificateRequestCompletedResponseContent:
+      type: object
+      required:
+        - requestStatus
+        - documentId
+      properties:
+        requestStatus:
+          type: string
+          description: The processing status in which the certificate request process is currently in
+          const: "COMPLETED"
+        documentId:
+          type: string
+          pattern: uuid
+          description: The UUID of the asset under which the certificate is available
+
+    CertificateRequestRejectedResponseContent:
+      type: object
+      required:
+        - requestStatus
+        - requestErrors
+      properties:
+        requestStatus:
+          type: string
+          description: The processing status in which the certificate request process is currently in
+          const: "REJECTED"
+        requestErrors:
+          type: array
+          description: Listing all reasons why the requested certificate can not be provided
+          items:
+            $ref: '#/components/schemas/Error'
+        locationErrors:
+          type: array
+          description: Optional detailed reasons for the rejection for each location
+          items:
+            $ref: '#/components/schemas/LocationErrorCollection'
+
+
+    BpnlType:
+      type: string
+      description: "A business partner number for legal entities. The provided regular expression ensures that the BPNL is composed of prefix 'BPNL', 10 digits and two alphanumeric letters."
+      pattern: "^BPNL[A-Z0-9]{12}$"
+
+    BpnsType:
+      type: string
+      pattern: "^BPNS[A-Z0-9]{12}$"
+
+    BpnLocation:
+      type: string
+      description: The BPNA or BPNS of either an address or site location
+      pattern: "^BPN[A|S][A-Z0-9]{11}$"
+      examples:
+        - "BPNA000000000001"
+        - "BPNS000000000002"
+
+    CertificateType:
+      description: "Detailed entity of the certificate like IS09001:2015, IATF 16949:2015 or other, valid types are registered at BPN metadatacontroller"
+      type: object
+      required:
+        - certificateType
+      properties:
+        certificateType:
+          type: string
+          description: "Type of the certificate as defined on the document,valid types are registered at BPN metadatacontroller"
+        certificateVersion:
+          type: string
+          description: "Version of the certificate as defined on the document, usually the specific version of a certification standard"
+
+
+    CertificatePush:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/FeedbackUrlHeader'
+        content:
+          type: object
+          required:
+            - businessPartnerNumber
+            - type
+            - registrationNumber
+            - validFrom
+            - validUntil
+            - trustLevel
+            - document
+          properties:
+            businessPartnerNumber:
+              description: The BPNL of the certified legal entity
+              $ref: "#/components/schemas/BpnlType"
+            type:
+              description: Type of the certificate as defined on the document
+              $ref: "#/components/schemas/CertificateType"
+            registrationNumber:
+              type: string
+              description: Registration number of the certificate as defined on the certificate
+            areaOfApplication:
+              type: string
+              description: Details on which areas / application types a certificate is valid for a company and/or site.
+            enclosedSites:
+              type: array
+              description: "Additional sites covered by the certificate, which can be either the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA) !ToDo!(Why is it called site then? And in the other requests such attribute is called location. Very misleading)"
+              items:
+                $ref: "#/components/schemas/EnclosedSite"
+            validFrom:
+              type: string
+              format: date
+              description: Valid from date as defined on the certificate
+            validUntil:
+              type: string
+              format: date
+              description: Valid valid until as defined on the certificate. If certificate never expires value until expected to be 9999-12-31 !ToDo!(Where does that convention come from? Why not just make it null?)
+            issuer:
+              description: The issuing authority e.g. TUEV Sued
+              $ref: "#/components/schemas/Issuer"
+            trustLevel:
+              type: string
+              description: The trust level of the given certificate
+              enum:
+                - none
+                - low
+                - high
+                - trusted
+            validator:
+              description: The data service provider who validates the given certificate
+              $ref: "#/components/schemas/TrustValidator"
+            uploader:
+              description: The BPNL of the business partner who originally provided the certifcate data or document
+              $ref: "#/components/schemas/BpnlType"
+            document:
+              description: The content and ID of the document
+              $ref: "#/components/schemas/DocumentContent"
+
+    DocumentContent:
+      description: Describe the certificate document content.
+      type: object
+      required:
+        - creationDate
+        - documentID
+        - contentType
+        - contentBase64
+      properties:
+        creationDate:
+          type: string
+          pattern: date-time
+          description: The creation date of the document.
+        documentID:
+          type: string
+          description: The id of the certificate document as stored by the data service provider.
+        contentType:
+          type: string
+          description: The MIME type of the document content.
+        contentBase64:
+          type: string
+          description: "The encoded data using the Base64 encoding scheme, which converts binary data into a string of ASCII characters. "
+
+
+    EnclosedSite:
+      description: "Entity representing an enclosed site, can be the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA)."
+      type: object
+      required:
+        - enclosedSiteBpn
+      properties:
+        enclosedSiteBpn:
+          description: The Business Partner Number (BPN) of an enclosed site
+          $ref: "#/components/schemas/BpnsType"
+        areaOfApplication:
+          type: string
+          description: Details on which areas / application types a certificate is valid for a company and/or site.
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Text detailing the error that occured
+          examples:
+            - "We do not process certificates on Sunday"
+            - "Can not provide certicate for requested locations"
+
+    Issuer:
+      description: Issuer name and the Business Partner Number (BPN).
+      type: object
+      required:
+        - issuerName
+      properties:
+        issuerName:
+          type: string
+          description: Name of the Issuer i.e. Certifying Authority.
+        issuerBpn:
+          description: The Business Partner Number (BPN) of the certificate issue.
+          $ref: "#/components/schemas/BpnlType"
+
+    LocationErrorCollection:
+      type: object
+      properties:
+        bpn:
+          $ref: '#/components/schemas/BpnLocation'
+        locationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationError'
+
+    LocationError:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+            - Site BPNS000000000003 is unknown
+
+    CertificateStatus:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          type: object
+          required:
+            - documentId
+            - certificateStatus
+            - locationBpns
+          properties:
+            documentId:
+              type: string
+              format: uuid
+            certificateStatus:
+              type: string
+              enum: [ACCEPTED, REJECTED, RECEIVED]
+            certificateErrors:
+              type: array
+              items:
+                $ref: '#/components/schemas/Error'
+            locationBpns:
+              type: array
+              items:
+                $ref: '#/components/schemas/BpnLocation'
+            locationErrors:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationErrorCollection'
+
+    CertificateFeedback:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          type: object
+          required:
+            - documentId
+            - certificateStatus
+            - locationBpns
+          properties:
+            documentId:
+              type: string
+              format: uuid
+            certificateStatus:
+              type: string
+              enum: [ACCEPTED, REJECTED, RECEIVED]
+            certificateErrors:
+              type: array
+              items:
+                $ref: '#/components/schemas/Error'
+            locationBpns:
+              type: array
+              items:
+                $ref: '#/components/schemas/BpnLocation'
+            locationErrors:
+              type: array
+              items:
+                $ref: '#/components/schemas/LocationErrorCollection'
+
+    TrustValidator:
+      description: The Business Partner Number (BPN) of the data service provider who validated the given certificate
+      type: object
+      properties:
+        validatorName:
+          type: string
+          description: The optional name of the data service provider who validated
+            the given certificate
+        validatorBpn:
+          description: The Business Partner Number (BPN) of the data service provider who validated the given certificate
+          $ref: "#/components/schemas/BpnlType"
+
+  examples:
+    CertificateRequestCompleted:
+      summary: A response for a successfully completed certificate request process
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Pull:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          requestStatus: "COMPLETED"
+          documentId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba"
+    CertificateRequestRejected:
+      summary: A response for a rejected certificated request process
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Pull:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          requestStatus: "REJECTED"
+          requestErrors:
+            - message: "We do not process certificates on Sunday"
+            - message: "Can not provide certicate for requested locations"
+          locationErrors:
+            - bpn: "BPNS000000000003"
+              locationErrors:
+                - message: "Site BPNS000000000003 is unknown"
+    CertificateAcceptedFeedback:
+      summary: Consumer accepts received certificate
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          certificateStatus: "ACCEPTED"
+          locationBpns:
+            - "BPNS000000000003"
+    CertificateReceivedFeedback:
+      summary: Consumer received certificate
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          certificateStatus: "RECEIVED"
+          locationBpns:
+            - "BPNS000000000003"
+    CertificateRejectedFeedback:
+      summary: Consumer rejected received certificate
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          certificateStatus: "REJECTED"
+          locationBpns:
+            - "BPNS000000000003"
+          certificateErrors:
+            - message: "We do not process certificates on Sunday"
+            - message: "Can not provide certicate for requested locations"
+          locationErrors:
+            - bpn: "BPNS000000000003"
+              locationErrors:
+                - message: "Site BPNS000000000003 is unknown"
+
+
+
+
+paths:
+  /companycertificate/request:
+    post:
+      summary: Certificate consumer requests a specific certificate from certificate provider
+      tags:
+        - Certificate Provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateRequest'
+      responses:
+        '202':
+          description: Certificate request in processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateRequestInProgressResponse'
+        '200':
+          description: Certificate request finished processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateRequestFinishedResponse'
+              examples:
+                Completed:
+                  $ref: '#/components/examples/CertificateRequestCompleted'
+                Rejected:
+                  $ref: '#/components/examples/CertificateRequestRejected'
+
+        '400':
+          description: Request malformed and can not be processed
+        '500':
+          description: Internal server error has occured
+
+  /companycertificate/push:
+    post:
+      summary: Notify that a certificate is available along with its content
+      tags:
+        - Certificate Consumer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatePush'
+      responses:
+        '200':
+          description: Notification processed successfully
+
+  /companycertificate/feedback:
+    post:
+      summary: Send feedback to an obtained certificate
+      tags:
+        - Certificate Provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateStatus'
+            examples:
+              Received:
+                $ref: '#/components/examples/CertificateReceivedFeedback'
+              Accepted:
+                $ref: '#/components/examples/CertificateAcceptedFeedback'
+              Rejected:
+                $ref: '#/components/examples/CertificateRejectedFeedback'
+      responses:
+        '200':
+          description: Status updated successfully
