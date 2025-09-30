@@ -101,6 +101,8 @@ Use case to give feedback for provided certificates:
 
 ### 2.1 API Specification
 
+This section introduces the certificate management notification API which is further detailed in the corresponding [OpenAPI specification](assets/OpenAPI_Spec.yaml).
+
 #### 2.1.1 API endpoints and resources
 
 ##### 2.1.1.1 Company Certificate Request

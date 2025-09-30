@@ -210,60 +210,7 @@ components:
         header:
           $ref: '#/components/schemas/FeedbackUrlHeader'
         content:
-          type: object
-          required:
-            - businessPartnerNumber
-            - type
-            - registrationNumber
-            - validFrom
-            - trustLevel
-            - document
-          properties:
-            businessPartnerNumber:
-              description: The BPNL of the certified legal entity
-              $ref: "#/components/schemas/BpnlType"
-            type:
-              description: Type of the certificate as defined on the document
-              $ref: "#/components/schemas/CertificateType"
-            registrationNumber:
-              type: string
-              description: Registration number of the certificate as defined on the certificate
-            areaOfApplication:
-              type: string
-              description: Details on which areas / application types a certificate is valid for a company and/or site.
-            enclosedSites:
-              type: array
-              description: "Additional sites covered by the certificate, which can be either the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA)"
-              items:
-                $ref: "#/components/schemas/EnclosedSite"
-            validFrom:
-              type: string
-              format: date
-              description: Valid from date as defined on the certificate
-            validUntil:
-              type: string
-              format: date
-              description: Valid valid until as defined on the certificate
-            issuer:
-              description: The issuing authority e.g. TUEV Sued
-              $ref: "#/components/schemas/Issuer"
-            trustLevel:
-              type: string
-              description: The trust level of the given certificate
-              enum:
-                - none
-                - low
-                - high
-                - trusted
-            validator:
-              description: The data service provider who validates the given certificate
-              $ref: "#/components/schemas/TrustValidator"
-            uploader:
-              description: The BPNL of the business partner who originally provided the certifcate data or document
-              $ref: "#/components/schemas/BpnlType"
-            document:
-              description: The content and ID of the document
-              $ref: "#/components/schemas/DocumentContent"
+          $ref: 'https://raw.githubusercontent.com/eclipse-tractusx/sldt-semantic-models/refs/heads/main/io.catenax.business_partner_certificate/3.1.0/gen/BusinessPartnerCertificate-schema.json'
 
     DocumentContent:
       description: Describe the certificate document content.
