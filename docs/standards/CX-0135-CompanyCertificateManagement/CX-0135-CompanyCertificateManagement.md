@@ -101,7 +101,7 @@ Use case to give feedback for provided certificates:
 
 ### 2.1 API Specification
 
-This section introduces the certificate management notification API which is further detailed in the corresponding [OpenAPI specification](assets/OpenAPI_Spec.yaml).
+This section introduces the certificate management notification API which is further detailed in the corresponding [OpenAPI specification](assets/openapi-spec.yaml).
 
 #### 2.1.1 API endpoints and resources
 
@@ -110,7 +110,7 @@ This section introduces the certificate management notification API which is fur
 The Certificate Consumer is requesting a specific certificate from the Certificate Provider.
 This request can be sent by the Certificate Consumer continuously, for updates on the request state on Certificate Provider side.
 
-![alt text](assets/State%20Machine%20Certificate%20Distributor.svg "Certificate Request API State Machine")
+![alt text](images/state-machine-certificate-distributor.svg "Certificate Request API State Machine")
 
 `POST /companycertificate/request`
 
@@ -197,6 +197,11 @@ This allows for skipping the EDC catalog search.
   }
 }
 ```
+
+>**`documentId` explanation**:
+> The reasoning why a documentId (the unique ID of EDC asset of the certificate) is to be returned (and not for example the certificate as a return payload) is,
+> so that the Certificate Provider can specify (for each certificate) a dedicated contract offer, and thus use different usage policies for the certificates and API(s).
+> That way the Certificate Provider has all options available in terms of data sovereignty and full access control on an EDC (contract based) level.
 
 ##### 2.1.1.1.4 HTTP Response Body for HTTP Code 200, Status: REJECTED
 
@@ -430,6 +435,11 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 | cx-taxo:CCMAPI | cx-taxo:CompanyCertificateDistributorApi | 3.0         | Offers *Certificate Provider API* for the Certificate Consumer to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
 | cx-taxo:CCMAPI | cx-taxo:CompanyCertificateReceiverApi    | 3.0         | Offers *Certificate Consumer API* for the Certificate Provider to [push](#2112-company-certificate-push) certificates to the Certificate Consumer.                                                             |
 
+>**Additional context**:
+> The reasoning behind two API assets is that for the certificate distributor and the certificate receiver role different usage policies may apply.
+> This ensures that there is a clear separation between the two roles.
+
+
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
 *Example*: it is possible to have these assets available next to one-another:
@@ -499,6 +509,7 @@ The certificate assets **MUST** be created by the Certificate Provider in their 
 The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type) (without spaces in the certificate type).
 The property enclosedSites **MUST** contain all BPNSs for which the certificate is valid.
 The subject **MUST** reference cx-taxo:CompanyCertificate.
+Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
 
 *Example Certificate EDC Asset:*
 ```json
@@ -506,6 +517,12 @@ The subject **MUST** reference cx-taxo:CompanyCertificate.
     "@id": "d195fa2f-e6bc-4cd6-94d4-2bb76e4bb548",
     "@type": "Asset",
     "properties": {
+        "dct:type": {
+            "@id": "https://w3id.org/catenax/taxonomy#Submodel"
+        },
+        "aas:semanticId": {
+            "@id": "urn:samm:io.catenax.business_partner_certificate:3.1.0#BusinessPartnerCertificate"
+        },
         "dct:certificateType": {
             "@id": "cx-taxo:ISO9001" 
         },
@@ -572,14 +589,14 @@ Business Application Provider:
 
 ##### 2.1.5.1 PUSH Mechanism
 
-![PUSH Scenarios](assets/Certificate_Push.png)
+![PUSH Scenarios](images/certificate-push.svg)
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Consumer via EDC (Eclipse Data Connector) components.
 The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a feedback message which is pushed to the provider.
 
 ##### 2.1.5.2 PULL Mechanism
 
-![PULL Scenarios](assets/Certificate_Pull.png)
+![PULL Scenarios](images/certificate-pull.svg)
 
 The Certificate PULL Diagram describes the process of Consumer retrieving a certificate from a Provider via an EDC.
 It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog. The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. Once retrieved, the Backend Certificate Consumer processes the certificate and sends a Feedback Message to confirm the status.
@@ -590,13 +607,15 @@ After the data provider has created a Certificate Asset with corresponding contr
 
 ##### 2.1.6 Usage Policy
 
-The “Connector Asset for Certificate Notifications” included in the EDC of a data consumer **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in the latest version.
-That includes the following usage purpose:
+All assets included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in the latest version.
+The use-case introduces the following usage purpose:
 
 - **`cx.ccm.base:1:`** *The exchanged business partner certificates are used for the purpose of verification and validation of the existence of a certification.*
 
-Additional more general usage policies **MAY** be included, but all the usage policies **MUST** contain the above usage purpose.
+Additional more general usage policies **MAY** be included, 
+but all the usage policies **MUST** contain the above usage purpose.
 
+*Minimal example of a usage policy without contract reference:*
 ``` json
 {
   "@context": [
