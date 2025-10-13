@@ -92,7 +92,7 @@ Today, Certificate Consumer do not have a way to request certificates from a Cer
 
 Use cases to provide certificates (from who initiates communication, negotiation and data transfer):
 
-- Certificate Consumer -> Certificate Provider : Company Certificate Request
+- Certificate Consumer -> Certificate Provider : Company Certificate Pull
 - Certificate Provider -> Certificate Consumer : Company Certificate Push
 
 Use case to give feedback for provided certificates:
@@ -119,7 +119,7 @@ This request can be sent by the Certificate Consumer continuously, for updates o
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
     "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "e94eaa84-6fb3-4693-a189-201a20dfcecf",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -162,9 +162,9 @@ Case: Certificate Request Still In Process
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "relatedMessageId" : "04df602b-fc4e-48fc-b455-8c8159db862f",
     "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -179,14 +179,14 @@ Case: Certificate Request Still In Process
 
 Finished Processing and Certificate Available in EDC.
 The content body also provides the documentId of the certificate.
-This allows for skipping the EDC catalog search.
+This simplifies finding the correct offer for the requested certificate.
 
 ```json
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
     "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "07a71867-f05e-4b6a-9944-2531b854c40a",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -213,9 +213,9 @@ The error message is free text.
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "relatedMessageId" : "c8592721-5f8e-4b3f-91ba-57f614bc06f2",
     "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -247,7 +247,7 @@ The Certificate Consumer may want to send a subsequent feedback message.
     "senderBpn" : "BPNL0000000001AB",
     "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp", 
     "context" : "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "8bf22334-97f2-42b4-afca-f68160707b83 ",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -286,7 +286,7 @@ The Certificate Consumer may want to send a subsequent feedback message.
 }
 ```
 The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects the feedback of the Certificate Consumer.
-The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint (as specified in the example above),
+The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
 >**Push header `senderFeedbackUrl` explanation**: 
@@ -295,6 +295,9 @@ where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for
 >Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution. 
 >A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
 
+>**DocumentID spelling**:
+> Please mind that in contrast to other requests the field `documentID` in the push notification request is spelled with a capital `D`.
+
 ##### 2.1.1.3 Company Certificate Feedback
 
 `POST /companycertificate/feedback`
@@ -302,19 +305,49 @@ where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for
 This API is used by the Certificate Consumer to give a feedback to the Certificate Provider, thus either accepting or rejecting the provided certificate.
 This is regardless of whether the certificate was [pulled](#2111-company-certificate-request) or [pushed](#2112-company-certificate-push).
 
-##### 2.1.1.3.1 Company Certificate Feedback: Accepted
+##### 2.1.1.3.1 Company Certificate Feedback: Received
 
-Certificate is accepted. 
-The documentId should match the documentId from the incoming message. 
-The enclosed BPNs can be a mix of sites and addresses.
+Certificate has been received by Certificate Consumer and validation is in progress.
 
 ```json
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "relatedMessageId" : "8284b2fc-6be3-4b90-a22a-a521eff86d0d",
     "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
+    "receiverBpn" : "BPNL0000000002CD",
+    "sentDateTime" : "2025-05-04T00:00:00-07:00",
+    "version" : "3.1.0"
+  },
+  "content": {
+    "documentId" : "00000000-0000-0000-0000-000000000002",
+    "certificateStatus":"RECEIVED",
+    "locationBpns" : [
+      "BPNS000000000001",
+      "BPNS000000000002",
+      "BPNS000000000003",
+      "BPNA000000000001",
+      "BPNA000000000002",
+      "BPNA000000000003"
+    ]
+  }
+}
+```
+
+##### 2.1.1.3.2 Company Certificate Feedback: Accepted
+
+Certificate is accepted. 
+The documentId **MUST** match the documentId that was communicated by the certificate provider.
+The `locationBpns` can be a mix of sites and addresses.
+
+```json
+{
+  "header" : {
+    "senderBpn" : "BPNL0000000001AB",
+    "relatedMessageId" : "884bb6b1-a845-4844-a87a-e178a703f127",
+    "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "messageId" : "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -334,7 +367,7 @@ The enclosed BPNs can be a mix of sites and addresses.
 }
 ```
 
-##### 2.1.1.3.2 Company Certificate Feedback: Rejected
+##### 2.1.1.3.3 Company Certificate Feedback: Rejected
 
 Certificate is rejected by Certificate Consumer with one or multiple reasons.
 
@@ -342,9 +375,9 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 {
   "header" : {
     "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
+    "relatedMessageId" : "dde834b1-db34-4500-8e2e-d61d7b2bb527",
     "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "messageId" : "f67b9853-b714-4427-a8f3-4c53a9822da0",
     "receiverBpn" : "BPNL0000000002CD",
     "sentDateTime" : "2025-05-04T00:00:00-07:00",
     "version" : "3.1.0"
@@ -377,36 +410,6 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 }
 ```
 
-##### 2.1.1.3.3 Company Certificate Feedback: Received
-
-Certificate has been received by Certificate Consumer and validation is in progress.
-
-```json
-{
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "d9452f24-3bf3-4134-b3eb-68858f1b2362",
-    "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
-  },
-  "content": {
-    "documentId" : "00000000-0000-0000-0000-000000000002",
-    "certificateStatus":"RECEIVED",
-    "locationBpns" : [
-      "BPNS000000000001",
-      "BPNS000000000002",
-      "BPNS000000000003",
-      "BPNA000000000001",
-      "BPNA000000000002",
-      "BPNA000000000003"
-    ]
-  }
-}
-```
-
 #### 2.1.2 ERROR HANDLING
 
 The following http response codes **MUST** be defined for all resources:
@@ -420,11 +423,17 @@ The following http response codes **MUST** be defined for all resources:
 
 The API **MUST** use JSON formatted data transmitted over HTTPS.
 
-#### 2.1.4  Data asset structure
+#### 2.1.4 Data asset structure
+
+The following sections detail how notification API and certificate assets should be offered in the dataspace.
+Please note the depicted examples show `@id` fields with random example UUIDs.
+Every dataspace participant may use their individual random uuid.
+
+##### 2.1.4.1  Notification API
 
 > *This section is normative*
 
-The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly. Rather, it **MUST** be called via a connector communication.
+The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly. Rather, it **MUST** be called with any CX-0018 compliant connector via dataspace protocol.
 Therefore, the Certificate Provider **MUST** offer an asset to expose an API for Certificate Consumer in the connector catalog.
 In turn, the Certificate Consumer **MAY** offer an asset to expose an API for the Certificate Provider in the connector catalog to push certificates to.
 
@@ -432,8 +441,8 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 
 | **Type**       | **Subject**                              | **Version** | **Description**                                                                                                                                                                                                |
 |----------------|------------------------------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateDistributorApi | 3.0         | Offers *Certificate Provider API* for the Certificate Consumer to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateReceiverApi    | 3.0         | Offers *Certificate Consumer API* for the Certificate Provider to [push](#2112-company-certificate-push) certificates to the Certificate Consumer.                                                             |
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateProviderApi | 3.0         | Offers *Certificate Provider API* for the Certificate Consumer to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateConsumerApi    | 3.0         | Offers *Certificate Consumer API* for the Certificate Provider to [push](#2112-company-certificate-push) certificates to the Certificate Consumer.                                                             |
 
 >**Additional context**:
 > The reasoning behind two API assets is that for the certificate distributor and the certificate receiver role different usage policies may apply.
@@ -443,21 +452,20 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
 *Example*: it is possible to have these assets available next to one-another:
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```, and 
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "2.0"}```, as well as
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi", "cx-common:version": "3.0"}```,
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```, and 
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "2.0"}```, as well as
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateConsumerApi", "cx-common:version": "3.0"}```,
 
 since they either differ in the value of the version or the subject. But it would not be possible to have two of the same subject and the same version.
 
 *Example that is not allowed:*
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```
 
 It doesn't matter if the assets are offered in one or in different connectors, as long as they belong to the same BPNL this is not allowed.
 
 
-
-*Example Certificate Provider API:*
+**Example Certificate Provider API**
 ```json
 {
   "@id": "81a0bdf8-732f-488e-bddb-1b9a78f0d1e0",
@@ -467,7 +475,7 @@ It doesn't matter if the assets are offered in one or in different connectors, a
       "@id": "cx-taxo:CCMAPI"
     },
     "dct:subject": {
-      "@id": "cx-taxo:CompanyCertificateManagementCertificateDistributorApi"
+      "@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi"
     },
     "dct:description": "Offers API for the Certificate Consumer to request certificates and send feedback for provided certificates.",
     "cx-common:version": "3.0"
@@ -481,7 +489,8 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 }
 ```
 
-*Example Certificate Consumer API:*
+**Example Certificate Consumer API**
+
 ```json
 {
   "@id": "ea5b4a1c-cd82-4cc2-80cb-860610969d96",
@@ -491,7 +500,7 @@ It doesn't matter if the assets are offered in one or in different connectors, a
       "@id": "cx-taxo:CCMAPI"
     },
     "dct:subject": {
-      "@id": "cx-taxo:CompanyCertificateManagementCertificateReceiverApi"
+      "@id": "cx-taxo:CompanyCertificateManagementCertificateConsumerApi"
     },
     "dct:description": " Offers API for the Certificate Provider to push certificates to the Certificate Consumer.",
     "cx-common:version": "3.0"
@@ -505,20 +514,26 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 }
 ```
 
+> The **API assets** are identified by the combination of `dct:subject` and `cx-common:version`.
+> When searching the EDC catalog for a specific API, make use of those properties in the catalog filter.
+
+##### 2.1.4.2  Certificates
+
 The certificate assets **MUST** be created by the Certificate Provider in their connector catalog to be consumed by the Certificate Consumer.
 The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type) (without spaces in the certificate type).
 The property enclosedSites **MUST** contain all BPNSs for which the certificate is valid.
 The subject **MUST** reference cx-taxo:CompanyCertificate.
 Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
 
-*Example Certificate EDC Asset:*
+**Example Certificate EDC Asset:**
+
 ```json
 {
     "@id": "d195fa2f-e6bc-4cd6-94d4-2bb76e4bb548",
     "@type": "Asset",
     "properties": {
         "dct:type": {
-            "@id": "https://w3id.org/catenax/taxonomy#Submodel"
+            "@id": "cx-taxo:Submodel"
         },
         "aas:semanticId": {
             "@id": "urn:samm:io.catenax.business_partner_certificate:3.1.0#BusinessPartnerCertificate"
@@ -547,7 +562,7 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
       "@type": "DataAddress",
       "type": "HttpData",
       "baseUrl": "https://backend-base-url/certificate-management-api-base-path",
-      "proxyQueryParams": "true",
+      "proxyQueryParams": "false",
       "proxyPath": "false",
       "proxyMethod": "false",
       "proxyBody": "false"
@@ -559,13 +574,6 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
     }
 }
 ```
-
->**`@id` explanation**:
-> Each of the above examples has a random example uuid. 
-> Every dataspace participant may use their individual random uuid.
-
-> The **API assets** are identified by the combination of `dct:subject` and `cx-common:version`.
-> When searching the EDC catalog for a specific API, make use of those properties in the catalog filter.
 
 > The **certificate assets** are identified by the combination of `dct:subject`, `dct:certificateType` and `dct:enclosedSites`.
 > When searching the EDC catalog for a specific asset for which the assetId is unkown, make use of those properties in the catalog filter.
@@ -592,22 +600,22 @@ Business Application Provider:
 ![PUSH Scenarios](images/certificate-push.svg)
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Consumer via EDC (Eclipse Data Connector) components.
-The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a feedback message which is pushed to the provider.
+The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  
+The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a feedback message which is pushed to the provider.
 
 ##### 2.1.5.2 PULL Mechanism
 
 ![PULL Scenarios](images/certificate-pull.svg)
 
 The Certificate PULL Diagram describes the process of Consumer retrieving a certificate from a Provider via an EDC.
-It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog. The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. Once retrieved, the Backend Certificate Consumer processes the certificate and sends a Feedback Message to confirm the status.
-
-##### 2.1.5.3 PUSH notification followed by PULL mechanism
-
-After the data provider has created a Certificate Asset with corresponding contract definition in the EDC Catalog the data provider sends a Certificate Available Notification to the data consumer. The data consumer uses the above described PULL mechanism to get the certificate data. This reduces the data consumers need for active checks for missing certificates or certificate updates and enables access to the latest certificate data.
+It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog. 
+The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). 
+The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. 
+Once retrieved, the Backend Certificate Consumer processes the certificate and sends a Feedback Message to confirm the status.
 
 ##### 2.1.6 Usage Policy
 
-All assets included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in the latest version.
+All assets included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in version 1.0.
 The use-case introduces the following usage purpose:
 
 - **`cx.ccm.base:1:`** *The exchanged business partner certificates are used for the purpose of verification and validation of the existence of a certification.*
@@ -653,7 +661,7 @@ but all the usage policies **MUST** contain the above usage purpose.
 }
 ```
 
-The left operand "leftOperand": "cx-policy:ContractReference" **MUST** be included only if such a bilateral framework contract exists.
+The constraint `{ "leftOperand": "cx-policy:ContractReference" }` **MUST** be included only if such a bilateral framework contract exists.
 
 ```json
 {
@@ -669,9 +677,9 @@ The left operand "leftOperand": "cx-policy:ContractReference" **MUST** be includ
 
 > *This section is normative*
 
-This aspect model is written in SAMM 2.1.0 as a modeling language conformant to [CX-0003:1.1] as input for the semantic driven workflow.
+This aspect model is written in SAMM 2.1.0 as a modeling language conformant to [CX-0003:1.1](https://catenax-ev.github.io/docs/standards/CX-0003-SAMMSemanticAspectMetaModel) as input for the semantic driven workflow.
 
-Like all Catena-X data models, this model is available in a machine-readable format on GitHub conformant to [CX-0003:1.1].
+Like all Catena-X data models, this model is available in a machine-readable format on GitHub conformant to [CX-0003:1.1](https://catenax-ev.github.io/docs/standards/CX-0003-SAMMSemanticAspectMetaModel).
 
 #### 3.1.1 LICENSE
 
@@ -712,7 +720,8 @@ Attribute: businessPartnerNumber
 
 #### 3.2.2 CERTIFICATE TYPE
 
-The attribute *CertificateType* refers to the type of the certificate the BPN is certified for. This data model is generic and currently supports, but is not limited to, the following list of certificate types. Additional certificate types will be validated in the future, and others may already be compatible with this generic model:
+The attribute *CertificateType* refers to the type of the certificate the BPN is certified for.
+This data model is generic and currently supports, but is not limited to, the following list of certificate types:
 
 - IATF 16949 (International Automotive Task Force) is a standard that defines the requirements for a quality management system in the automotive industry.
 - ISO 14001 is a standard that outlines the requirements for an environmental management system to help organizations minimize their impact on the environment.
@@ -726,7 +735,30 @@ The attribute *CertificateType* refers to the type of the certificate the BPN is
 - AEO (Authorized Economic Operator), CTPAT (Customs-Trade Partnership Against Terrorism), Security Declaration is an internationally recognized certificate that confirms a company's compliance with customs regulations and supply chain security standards. CTPAT (Customs-Trade Partnership Against Terrorism) is a voluntary program that promotes supply chain security and trade compliance with U.S. Customs and Border Protection. Security Declaration is a document that outlines a company's security measures and procedures for the transportation of goods.
 - VDA6.4 is a standard that defines the requirements for a quality management system in the automotive industry, with a focus on process auditing.
 
-*Note*: The spelling of the certificate type may vary slightly on the user interface or within the data model.
+Additional certificate types will be validated in the future, and others may already be compatible with this generic model.
+
+For the exchange certificate types please adhere to the following spelling rules:
+
+1. Only latin letters and numbers are allowed
+2. All letters are in lowercase
+3. No whitespaces, underscores or any other special characters are allowed
+
+Applying these rules to the supported list of certificate types leads to the following codes:
+
+| Name          | Code        |
+|---------------|-------------|
+| IATF 16949    | iatf16949   |
+| ISO 14001     | iso14001    |
+| ISO 9001      | iso9001     |
+| ISO 45001     | iso45001    |
+| ISO/IEC 27001 | isoiec27001 |
+| ISO 50001     | iso50001    |
+| ISO/IEC 17025 | isoiec17025 |
+| ISO 20000     | iso20000    |
+| ISO 22301     | iso22301    |
+| AEO           | aeo         |
+| VDA6.4        | vda64       |
+
 
 #### 3.2.3 REGISTRATION AND ISSUING
 
