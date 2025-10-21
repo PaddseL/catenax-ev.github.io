@@ -557,14 +557,14 @@ Certificate Provider & Certificate Consumer:
 - Certificate Provider **MUST** set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
 
 
-- Certificate Consumer **MAY** offer a Certificate Consumer API for the Certificate Provider to push certificates to, but **MUST** set the correct access policy on the offer, when chosing to do so.
+- Certificate Consumer **MAY** implement the [push endpoint](#2112-company-certificate-push) for the Certificate Provider to push certificates to, but **MUST** set the correct access policy on the offer, when chosing to do so.
 - Certificate Consumer **MAY** send a certificate request via POST /companycertificate/request which **MUST** be replied to by the Certificate Provider according to the endpoint definitions.
 - Certificate Consumer **MAY** send a notification of acceptance or rejection via POST /companycertificate/feedback.
   Certificate Provider **MUST** respond according to the [error handling](#212-error-handling).
 
 Business Application Provider:
-- Business Application Provider **MUST** implement all features of the Certificate Provider API, including both the pull, and the feedback mechanism.
-- Business Application Provider **MUST** implement all features of the Certificate Consumer API, for supporting the push mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including both the pull, and the feedback mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, for supporting the push mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
