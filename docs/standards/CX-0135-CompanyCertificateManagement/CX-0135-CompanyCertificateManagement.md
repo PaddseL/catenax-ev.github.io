@@ -433,39 +433,35 @@ Every dataspace participant may use their individual random uuid.
 
 > *This section is normative*
 
-The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly. Rather, it **MUST** be called with any CX-0018 compliant connector via dataspace protocol.
+The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly. 
+Rather, it **MUST** be called with any CX-0018 compliant connector via dataspace protocol.
 Therefore, the Certificate Provider **MUST** offer an asset to expose an API for Certificate Consumer in the connector catalog.
 In turn, the Certificate Consumer **MAY** offer an asset to expose an API for the Certificate Provider in the connector catalog to push certificates to.
 
 The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
 
-| **Type**       | **Subject**                              | **Version** | **Description**                                                                                                                                                                                                |
-|----------------|------------------------------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateProviderApi | 3.0         | Offers *Certificate Provider API* for the Certificate Consumer to [request](#2111-company-certificate-request) certificates and send [feedback](#2113-company-certificate-feedback) for provided certificates. |
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateConsumerApi    | 3.0         | Offers *Certificate Consumer API* for the Certificate Provider to [push](#2112-company-certificate-push) certificates to the Certificate Consumer.                                                             |
-
->**Additional context**:
-> The reasoning behind two API assets is that for the certificate distributor and the certificate receiver role different usage policies may apply.
-> This ensures that there is a clear separation between the two roles.
+| **Type**       | **Subject**                               | **Version** | **Description**                                                                                                                                                                                                                                |
+|----------------|-------------------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateNotificationApi | 3.0         | Offers *Certificate Notification API* for [requesting](#2111-company-certificate-request) and [pushing](#2112-company-certificate-push) certificates as well as send [feedback](#2113-company-certificate-feedback) for provided certificates. |
 
 
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
 *Example*: it is possible to have these assets available next to one-another:
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```, and 
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "2.0"}```, as well as
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateConsumerApi", "cx-common:version": "3.0"}```,
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```, and 
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "2.0"}```
 
-since they either differ in the value of the version or the subject. But it would not be possible to have two of the same subject and the same version.
+since they either differ in the value of the version or the subject. 
+But it would not be possible to have two of the same subject and the same version.
 
 *Example that is not allowed:*
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```
 
 It doesn't matter if the assets are offered in one or in different connectors, as long as they belong to the same BPNL this is not allowed.
 
 
-**Example Certificate Provider API**
+**Example Certificate Notification API**
 ```json
 {
   "@id": "81a0bdf8-732f-488e-bddb-1b9a78f0d1e0",
@@ -475,9 +471,9 @@ It doesn't matter if the assets are offered in one or in different connectors, a
       "@id": "cx-taxo:CCMAPI"
     },
     "dct:subject": {
-      "@id": "cx-taxo:CompanyCertificateManagementCertificateProviderApi"
+      "@id": "cx-taxo:CompanyCertificateNotificationApi"
     },
-    "dct:description": "Offers API for the Certificate Consumer to request certificates and send feedback for provided certificates.",
+    "dct:description": "Offers API for request and pushing certificates as well as sending feedback for provided certificates.",
     "cx-common:version": "3.0"
   },
   "dataAddress": {},
@@ -489,30 +485,6 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 }
 ```
 
-**Example Certificate Consumer API**
-
-```json
-{
-  "@id": "ea5b4a1c-cd82-4cc2-80cb-860610969d96",
-  "@type": "Asset",
-  "properties": {
-    "dct:type": {
-      "@id": "cx-taxo:CCMAPI"
-    },
-    "dct:subject": {
-      "@id": "cx-taxo:CompanyCertificateManagementCertificateConsumerApi"
-    },
-    "dct:description": " Offers API for the Certificate Provider to push certificates to the Certificate Consumer.",
-    "cx-common:version": "3.0"
-  },
-  "dataAddress": {},
-  "@context": {
-    "dct": "http://purl.org/dc/terms/",
-    "cx-taxo": "https://w3id.org/catenax/taxonomy#",
-    "cx-common": "https://w3id.org/catenax/ontology/common#"
-  }
-}
-```
 
 > The **API assets** are identified by the combination of `dct:subject` and `cx-common:version`.
 > When searching the EDC catalog for a specific API, make use of those properties in the catalog filter.
