@@ -492,7 +492,7 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 ##### 2.1.4.2  Certificates
 
 The certificate assets **MUST** be created by the Certificate Provider in their connector catalog to be consumed by the Certificate Consumer.
-The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type) (without spaces in the certificate type).
+The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type).
 The property enclosedSites **MUST** contain all BPNSs for which the certificate is valid.
 The subject **MUST** reference cx-taxo:CompanyCertificate.
 Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
@@ -553,18 +553,17 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
 #### 2.1.5 MESSAGE FLOW EXPECTATIONS
 
 Certificate Provider & Certificate Consumer:
+- Certificate Provider **MUST** support at least one of the certificate provision mechanisms (push and/or pull mechanism)
 - Certificate Provider **MUST** expose company certificates in their catalog when using the pull mechanism.
 - Certificate Provider **MUST** set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
 
-
-- Certificate Consumer **MAY** implement the [push endpoint](#2112-company-certificate-push) for the Certificate Provider to push certificates to, but **MUST** set the correct access policy on the offer, when chosing to do so.
+- Certificate Consumer **MAY** implement the [push endpoint](#2112-company-certificate-push) for the Certificate Provider to push certificates to, but **MUST** set the correct access policy on the offer, when choosing to do so.
 - Certificate Consumer **MAY** send a certificate request via POST /companycertificate/request which **MUST** be replied to by the Certificate Provider according to the endpoint definitions.
 - Certificate Consumer **MAY** send a notification of acceptance or rejection via POST /companycertificate/feedback.
   Certificate Provider **MUST** respond according to the [error handling](#212-error-handling).
 
 Business Application Provider:
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, including both the pull, and the feedback mechanism.
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, for supporting the push mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support the push, the pull and also the feedback mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
@@ -709,7 +708,7 @@ This data model is generic and currently supports, but is not limited to, the fo
 
 Additional certificate types will be validated in the future, and others may already be compatible with this generic model.
 
-For the exchange certificate types please adhere to the following spelling rules:
+For the exchange certificate types you **MUST** adhere to the following spelling rules:
 
 1. Only latin letters and numbers are allowed
 2. All letters are in lowercase
