@@ -787,7 +787,7 @@ The internal reference id to request a certificate document.
 
 - [CX-0003:1.1 SAMM Aspect Meta Model](https://catenax-ev.github.io/docs/standards/CX-0003-SAMMSemanticAspectMetaModel)
 - [CX-0010:2.0 Business Partner Number](https://catenax-ev.github.io/docs/standards/CX-0010-BusinessPartnerNumber)
-- CX-0151 Industry Core: Basics v.1.0.0
+- [CX-0151:1.0.0 Industry Core: Basics](https://catenax-ev.github.io/docs/standards/CX-0151-IndustryCoreBasics)
 
 ### 4.2 NON-NORMATIVE REFERENCES
 
