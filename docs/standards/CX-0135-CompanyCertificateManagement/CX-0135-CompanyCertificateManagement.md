@@ -722,12 +722,14 @@ Applying these rules to the supported list of certificate types leads to the fol
 | ISO 14001     | iso14001    |
 | ISO 9001      | iso9001     |
 | ISO 45001     | iso45001    |
+| OHSAS 18001   | ohsas18001  |
 | ISO/IEC 27001 | isoiec27001 |
 | ISO 50001     | iso50001    |
 | ISO/IEC 17025 | isoiec17025 |
 | ISO 20000     | iso20000    |
 | ISO 22301     | iso22301    |
 | AEO           | aeo         |
+| CTPAT         | ctpat       |
 | VDA6.4        | vda64       |
 
 
