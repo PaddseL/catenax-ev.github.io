@@ -39,6 +39,7 @@ components:
             - "CompanyCertificateManagement-CCMAPI-Push:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+            - "CompanyCertificateManagement-CCMAPI-Available:1.0.0"
         receiverBpn:
           type: string
           description: The intended receiver legal entity BPNL of this request
@@ -292,40 +293,6 @@ components:
           examples:
             - Site BPNS000000000003 is unknown
 
-    CertificateStatus:
-      type: object
-      required:
-        - header
-        - content
-      properties:
-        header:
-          $ref: '#/components/schemas/Header'
-        content:
-          type: object
-          required:
-            - documentId
-            - certificateStatus
-            - locationBpns
-          properties:
-            documentId:
-              type: string
-              format: uuid
-            certificateStatus:
-              type: string
-              enum: [ACCEPTED, REJECTED, RECEIVED]
-            certificateErrors:
-              type: array
-              items:
-                $ref: '#/components/schemas/Error'
-            locationBpns:
-              type: array
-              items:
-                $ref: '#/components/schemas/BpnLocation'
-            locationErrors:
-              type: array
-              items:
-                $ref: '#/components/schemas/LocationErrorCollection'
-
     CertificateFeedback:
       type: object
       required:
@@ -359,6 +326,31 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/LocationErrorCollection'
+
+    CertificateAvailable:
+      type: object
+      required:
+        - header
+        - content
+      properties:
+        header:
+          $ref: '#/components/schemas/Header'
+        content:
+          type: object
+          required:
+            - documentId
+            - certificateType
+          properties:
+            documentId:
+              type: string
+              format: uuid
+            certificateType:
+              type: string
+              description: "Type of the certificate as defined on the document, valid types are registered at BPN metadatacontroller"
+            locationBpns:
+              type: array
+              items:
+                $ref: '#/components/schemas/BpnLocation'
 
     TrustValidator:
       description: The Business Partner Number (BPN) of the data service provider who validated the given certificate
@@ -458,6 +450,21 @@ components:
               locationErrors:
                 - message: "Site BPNS000000000003 is unknown"
 
+    CertificateAvailable:
+      summary: Provider notifies consumer that a certificate is available
+      value:
+        header:
+          senderBpn: "BPNL0000000001AB"
+          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Available:1.0.0"
+          receiverBpn: "BPNL0000000002CD"
+          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          version: "3.1.0"
+        content:
+          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          certificateType: "iso9001"
+          locationBpns:
+            - "BPNS000000000003"
 
 
 
@@ -533,3 +540,19 @@ paths:
       responses:
         '200':
           description: Status updated successfully
+
+  /companycertificate/available:
+    post:
+      summary: Certificate provider notifies the certificate consumer that a certificate is available
+      tags:
+        - Certificate Consumer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateAvailable'
+      responses:
+        '200':
+          description: Notification processed successfully
+

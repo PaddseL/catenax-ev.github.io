@@ -43,6 +43,7 @@ The following company certificate use cases are supported in this release:
 1. Certificate Provider wants to publish a certificate / Certificate Consumer wants to discover a published certificate.
 2. Certificate Consumer wants to request a certificate from a specific Certificate Provider
 3. Certificate Consumer wants to notify a Certificate Provider of acceptance or rejection of a certificate published in #1 via a feedback message
+4. Certificate Provider wants to notify a Certificate Consumer of the availability of a new certificate asset
 
 For avoidance of the doubt, we are not replacing the existing publication semantic model.
 
@@ -98,6 +99,10 @@ Use cases to provide certificates (from who initiates communication, negotiation
 Use case to give feedback for provided certificates:
 
 - Certificate Consumer -> Certificate Provider : Company Certificate Status (Accepted, Rejected or Received)
+
+Use case to notify about availability of certificates:
+
+- Certificate Provider -> Certificate Consumer : Company Certificate Available
 
 ### 2.1 API Specification
 
@@ -289,7 +294,7 @@ The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects the 
 The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
->**Push header `senderFeedbackUrl` explanation**: 
+>**Push header `senderFeedbackUrl` explanation**:
 >This information is intended as a temporary solution to support the unique identification of multiple feedback endpoints across multiple EDCs belonging to one legal entity. 
 >The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs. 
 >Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution. 
@@ -405,6 +410,35 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
     "locationErrors" : [
       { "bpn":"BPNS000000000002", "locationErrors": [{"message":"Site BPNS000000000002 has been Rejected"}]},
       { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is missing"}]}
+    ]
+  }
+}
+```
+
+##### 2.1.1.3 Company Certificate Available
+
+The Certificate Consumer is notified that a certificate is available. The Certificate Consumer may want to send a subsequent GET or fetch the asset from the catalog.
+
+```json
+{
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "context": "CompanyCertificateManagement-CCMAPI-Available:1.0.0",
+    "messageId": "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
+  },
+  "content": {
+    "documentId": "00000000-0000-0000-0000-000000000001",
+    "certificateType": "iso9001",
+    "locationBpns": [
+      "BPNS000000000001",
+      "BPNS000000000002",
+      "BPNS000000000003",
+      "BPNA000000000001",
+      "BPNA000000000002",
+      "BPNA000000000003"
     ]
   }
 }
@@ -562,8 +596,12 @@ Certificate Provider & Certificate Consumer:
 - Certificate Consumer **MAY** send a notification of acceptance or rejection via POST /companycertificate/feedback.
   Certificate Provider **MUST** respond according to the [error handling](#212-error-handling).
 
+- Certificate Provider **MAY** send a notification of availability via POST /companycertificate/available after the referenced company certificate is exposed in their catalog.
+  Certificate Consumer **MUST** respond according to the [error handling](#212-error-handling).
+- Certificate Consumer **MAY** implement the [available endpoint](#2113-company-certificate-available) for the Certificate Provider to send availability notifications to, but **MUST** set the correct access policy on the offer, when choosing to do so.
+
 Business Application Provider:
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support the push, the pull and also the feedback mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the feedback mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
@@ -583,6 +621,12 @@ It begins with the provider creating a Certificate Asset with corresponding cont
 The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). 
 The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. 
 Once retrieved, the Backend Certificate Consumer processes the certificate and sends a Feedback Message to confirm the status.
+
+##### 2.1.5.3 AVAILABLE notification followed by PULL mechanism
+
+After the Certificate Provider has created a Certificate Asset with corresponding contract definition in the EDC Catalog, the Certificate Provider sends a Certificate Available Notification to the Certificate Consumer.
+The Certificate Consumer uses the above described PULL mechanism to get the certificate data.
+This reduces the Certificate Consumers need for active checks for missing certificates or certificate updates and enables access to the latest certificate data.
 
 ##### 2.1.6 Usage Policy
 
