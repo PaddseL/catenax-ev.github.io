@@ -102,7 +102,7 @@ components:
             certifiedBpn:
               type: string
               description: The BPNL of the legal entity for which the requested certificate has been issued
-              pattern: "^BPNL[A-Z0-9]{12}$"
+              pattern: "^BPNL[a-zA-Z0-9]{12}$"
               examples:
                 - "BPNL0000000002CD"
             certificateType:
@@ -188,7 +188,7 @@ components:
     BpnLocation:
       type: string
       description: The BPNA or BPNS of either an address or site location
-      pattern: "^BPN[AS][A-Z0-9]{12}$"
+      pattern: "^BPN[AS][a-zA-Z0-9]{12}$"
       examples:
         - "BPNA000000000001"
         - "BPNS000000000002"
