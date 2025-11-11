@@ -453,7 +453,8 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 
 ##### 2.1.1.3 Company Certificate Available
 
-The Certificate Consumer is notified that a certificate is available. The Certificate Consumer may want to send a subsequent GET or fetch the asset from the catalog.
+The Certificate Consumer is notified that a certificate is available.
+The Certificate Consumer may want to get the certificate via the pull mechanism.
 
 ```json
 {
@@ -633,7 +634,7 @@ Certificate Provider & Certificate Consumer:
   Certificate Provider **MUST** respond according to the [error handling](#212-error-handling).
 
 - Certificate Provider **MAY** send a notification of availability via POST /companycertificate/available after the referenced company certificate is exposed in their catalog.
-  Certificate Consumer **MUST** respond according to the [error handling](#212-error-handling).
+  Certificate Consumer **MUST** respond according to the [error handling](#212-error-handling) and **SHOULD** get the new certificate via the pull mechanism.
 - Certificate Consumer **MAY** implement the [available endpoint](#2113-company-certificate-available) for the Certificate Provider to send availability notifications to, but **MUST** set the correct access policy on the offer, when choosing to do so.
 
 Business Application Provider:
