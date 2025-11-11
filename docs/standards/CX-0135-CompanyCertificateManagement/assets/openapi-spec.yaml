@@ -170,16 +170,6 @@ components:
           items:
             $ref: '#/components/schemas/LocationErrorCollection'
 
-
-    BpnlType:
-      type: string
-      description: "A business partner number for legal entities. The provided regular expression ensures that the BPNL is composed of prefix 'BPNL', 10 digits and two alphanumeric letters."
-      pattern: "^BPNL[A-Z0-9]{12}$"
-
-    BpnsType:
-      type: string
-      pattern: "^BPNS[A-Z0-9]{12}$"
-
     BpnLocation:
       type: string
       description: The BPNA or BPNS of either an address or site location
@@ -188,18 +178,6 @@ components:
         - "BPNA000000000001"
         - "BPNS000000000002"
 
-    CertificateType:
-      description: "Detailed entity of the certificate like IS09001:2015, IATF 16949:2015 or other, valid types are registered at BPN metadatacontroller"
-      type: object
-      required:
-        - certificateType
-      properties:
-        certificateType:
-          type: string
-          description: "Type of the certificate as defined on the document,valid types are registered at BPN metadatacontroller"
-        certificateVersion:
-          type: string
-          description: "Version of the certificate as defined on the document, usually the specific version of a certification standard"
 
 
     CertificatePush:
@@ -213,43 +191,6 @@ components:
         content:
           $ref: 'https://raw.githubusercontent.com/eclipse-tractusx/sldt-semantic-models/refs/heads/main/io.catenax.business_partner_certificate/3.1.0/gen/BusinessPartnerCertificate-schema.json'
 
-    DocumentContent:
-      description: Describe the certificate document content.
-      type: object
-      required:
-        - creationDate
-        - documentID
-        - contentType
-        - contentBase64
-      properties:
-        creationDate:
-          type: string
-          pattern: date-time
-          description: The creation date of the document.
-        documentID:
-          type: string
-          description: The id of the certificate document as stored by the data service provider.
-        contentType:
-          type: string
-          description: The MIME type of the document content.
-        contentBase64:
-          type: string
-          description: "The encoded data using the Base64 encoding scheme, which converts binary data into a string of ASCII characters. "
-
-
-    EnclosedSite:
-      description: "Entity representing an enclosed site, can be the Business Partner Number Site (BPNS) or Business Partner Number Address (BPNA)."
-      type: object
-      required:
-        - enclosedSiteBpn
-      properties:
-        enclosedSiteBpn:
-          description: The Business Partner Number (BPN) of an enclosed site
-          $ref: "#/components/schemas/BpnsType"
-        areaOfApplication:
-          type: string
-          description: Details on which areas / application types a certificate is valid for a company and/or site.
-
     Error:
       type: object
       required:
@@ -261,19 +202,6 @@ components:
           examples:
             - "We do not process certificates on Sunday"
             - "Can not provide certicate for requested locations"
-
-    Issuer:
-      description: Issuer name and the Business Partner Number (BPN).
-      type: object
-      required:
-        - issuerName
-      properties:
-        issuerName:
-          type: string
-          description: Name of the Issuer i.e. Certifying Authority.
-        issuerBpn:
-          description: The Business Partner Number (BPN) of the certificate issue.
-          $ref: "#/components/schemas/BpnlType"
 
     LocationErrorCollection:
       type: object
@@ -351,18 +279,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/BpnLocation'
-
-    TrustValidator:
-      description: The Business Partner Number (BPN) of the data service provider who validated the given certificate
-      type: object
-      properties:
-        validatorName:
-          type: string
-          description: The optional name of the data service provider who validated
-            the given certificate
-        validatorBpn:
-          description: The Business Partner Number (BPN) of the data service provider who validated the given certificate
-          $ref: "#/components/schemas/BpnlType"
 
   examples:
     CertificateRequestCompleted:
