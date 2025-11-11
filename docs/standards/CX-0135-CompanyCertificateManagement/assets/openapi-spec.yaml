@@ -26,11 +26,13 @@ components:
           pattern: "^BPNL[a-zA-Z0-9]{12}$"
           type: string
           description: The Business Partner Number of the sending party
-          example: BPNL0000000001AB
+          examples:
+            - BPNL0000000001AB
         context:
           type: string
           description: The context defines the type of company certificate message
-          example: CompanyCertificateManagement-CCMAPI-Request:1.0.0
+          examples:
+            - CompanyCertificateManagement-CCMAPI-Request:1.0.0
           enum:
           - CompanyCertificateManagement-CCMAPI-Request:1.0.0
           - CompanyCertificateManagement-CCMAPI-Push:1.0.0
@@ -40,31 +42,37 @@ components:
           pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
           type: string
           description: A UUIDv4 to uniquely identify a message
-          example: urn:uuid:24c2eaf5-c43a-4c31-8180-801cd7ac696e
+          examples:
+            - urn:uuid:24c2eaf5-c43a-4c31-8180-801cd7ac696e
         receiverBpn:
           pattern: "^BPNL[a-zA-Z0-9]{12}$"
           type: string
           description: The Business Partner Number of the receiving party
-          example: BPNL0000000002CD
+          examples:
+            - BPNL0000000002CD
         sentDateTime:
           type: string
           description: Time zone aware timestamp holding the date and the time the message was sent by the sending party. The value MUST be formatted according to the ISO 8601 standard
           format: date-time
-          example: 2024-10-07T10:15:00Z
+          examples:
+            - 2024-10-07T10:15:00Z
         expectedResponseBy:
           type: string
           description: Time zone aware timestamp holding the date and time by which the sending party expects a certain type of response from the receiving party
           format: date-time
-          example: 2024-10-07T10:15:00Z
+          examples:
+            - 2024-10-07T10:15:00Z
         relatedMessageId:
           pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
           type: string
           description: Unique ID identifying a message somehow related to the current one
-          example: urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
+          examples:
+            - urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
         version:
           type: string
           description: The version number defining the structure and the semantics of the message's header
-          example: 3.1.0
+          examples:
+            - 3.1.0
 
     FeedbackUrlHeader:
       allOf:
@@ -74,7 +82,8 @@ components:
             senderFeedbackUrl:
               type: string
               description: URL of the EDC DSP endpoint to send feedback to
-              example: https://domain.tld/path/to/edc/api/v1/dsp
+              examples:
+                - https://domain.tld/path/to/edc/api/v1/dsp
 
     CertificateRequest:
       type: object
