@@ -13,48 +13,58 @@ components:
   schemas:
     Header:
       type: object
+      description: Characteristic describing the common shared aspect Message Header of an incoming company certificate notification
       required:
-        - senderBpn
-        - context
-        - messageId
-        - receiverBpn
-        - sentDateTime
-        - version
+      - context
+      - messageId
+      - receiverBpn
+      - senderBpn
+      - sentDateTime
+      - version
       properties:
         senderBpn:
+          pattern: "^BPNL[a-zA-Z0-9]{12}$"
           type: string
-          description: The BPNL of the legal entity which send this request
-          examples:
-            - "BPNL0000000001AB"
-        messageId:
-          type: string
-          format: uuid
-          description: Identifier for this specific request being sent
-          examples:
-            - "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          description: The Business Partner Number of the sending party
+          example: BPNL0000000001AB
         context:
           type: string
-          description: The type of use case this request belongs to
+          description: The context defines the type of company certificate message
+          example: CompanyCertificateManagement-CCMAPI-Request:1.0.0
           enum:
-            - "CompanyCertificateManagement-CCMAPI-Push:1.0.0"
-            - "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
-            - "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
-            - "CompanyCertificateManagement-CCMAPI-Available:1.0.0"
-        receiverBpn:
+          - CompanyCertificateManagement-CCMAPI-Request:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Push:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Feedback:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Available:1.0.0
+        messageId:
+          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
           type: string
-          description: The intended receiver legal entity BPNL of this request
-          examples:
-            - "BPNL0000000002CD"
+          description: A UUIDv4 to uniquely identify a message
+          example: urn:uuid:24c2eaf5-c43a-4c31-8180-801cd7ac696e
+        receiverBpn:
+          pattern: "^BPNL[a-zA-Z0-9]{12}$"
+          type: string
+          description: The Business Partner Number of the receiving party
+          example: BPNL0000000002CD
         sentDateTime:
           type: string
-          description: The full time and date with timezone on when this request has been sent by the sender
+          description: Time zone aware timestamp holding the date and the time the message was sent by the sending party. The value MUST be formatted according to the ISO 8601 standard
           format: date-time
-          examples:
-            - "2025-05-04T00:00:00-07:00Z"
+          example: 2024-10-07T10:15:00Z
+        expectedResponseBy:
+          type: string
+          description: Time zone aware timestamp holding the date and time by which the sending party expects a certain type of response from the receiving party
+          format: date-time
+          example: 2024-10-07T10:15:00Z
+        relatedMessageId:
+          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          type: string
+          description: Unique ID identifying a message somehow related to the current one
+          example: urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
         version:
           type: string
-          examples:
-            - "3.1.0"
+          description: The version number defining the structure and the semantics of the message's header
+          example: 3.1.0
 
     FeedbackUrlHeader:
       allOf:
@@ -63,10 +73,8 @@ components:
           properties:
             senderFeedbackUrl:
               type: string
-              description: The DSP URL from where the sender of the request expectes to receive feedback
-              examples:
-                - "https://domain.tld/path/to/edc/api/v1/dsp"
-
+              description: URL of the EDC DSP endpoint to send feedback to
+              example: https://domain.tld/path/to/edc/api/v1/dsp
 
     CertificateRequest:
       type: object
