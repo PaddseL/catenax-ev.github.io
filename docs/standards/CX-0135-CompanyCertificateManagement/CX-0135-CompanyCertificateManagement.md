@@ -167,7 +167,6 @@ Case: Certificate Request Still In Process
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "relatedMessageId": "04df602b-fc4e-48fc-b455-8c8159db862f",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
     "messageId": "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
     "receiverBpn": "BPNL0000000002CD",
@@ -218,7 +217,6 @@ The error message is free text.
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "relatedMessageId": "c8592721-5f8e-4b3f-91ba-57f614bc06f2",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
     "messageId": "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
     "receiverBpn": "BPNL0000000002CD",
@@ -331,7 +329,6 @@ Certificate has been received by Certificate Consumer and validation is in progr
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "relatedMessageId": "8284b2fc-6be3-4b90-a22a-a521eff86d0d",
     "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
     "messageId": "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
     "receiverBpn": "BPNL0000000002CD",
@@ -363,7 +360,6 @@ The `locationBpns` can be a mix of sites and addresses.
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "relatedMessageId": "884bb6b1-a845-4844-a87a-e178a703f127",
     "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
     "messageId": "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
     "receiverBpn": "BPNL0000000002CD",
@@ -393,7 +389,6 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "relatedMessageId": "dde834b1-db34-4500-8e2e-d61d7b2bb527",
     "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
     "messageId": "f67b9853-b714-4427-a8f3-4c53a9822da0",
     "receiverBpn": "BPNL0000000002CD",
