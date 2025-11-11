@@ -121,18 +121,18 @@ This request can be sent by the Certificate Consumer continuously, for updates o
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "e94eaa84-6fb3-4693-a189-201a20dfcecf",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
+    "messageId": "e94eaa84-6fb3-4693-a189-201a20dfcecf",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
   "content": {
-    "certifiedBpn" : "BPNL00000003AYRE",
-    "certificateType" : "ISO9001",
-    "locationBpns" : [ 
+    "certifiedBpn": "BPNL00000003AYRE",
+    "certificateType": "ISO9001",
+    "locationBpns": [
       "BPNA000000000001",
       "BPNA000000000002",
       "BPNS000000000003"
@@ -165,17 +165,17 @@ Case: Certificate Request Still In Process
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "04df602b-fc4e-48fc-b455-8c8159db862f",
-    "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "relatedMessageId": "04df602b-fc4e-48fc-b455-8c8159db862f",
+    "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
+    "messageId": "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
-  "content" : {
-    "requestStatus":"IN_PROGRESS"
+  "content": {
+    "requestStatus": "IN_PROGRESS"
   }
 }
 ```
@@ -188,17 +188,17 @@ This simplifies finding the correct offer for the requested certificate.
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "07a71867-f05e-4b6a-9944-2531b854c40a",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
+    "messageId": "07a71867-f05e-4b6a-9944-2531b854c40a",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
   "content": {
-   "documentId" : "00000000-0000-0000-0000-000000000001",
-   "requestStatus":"COMPLETED"
+    "documentId": "00000000-0000-0000-0000-000000000001",
+    "requestStatus": "COMPLETED"
   }
 }
 ```
@@ -216,23 +216,34 @@ The error message is free text.
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "c8592721-5f8e-4b3f-91ba-57f614bc06f2",
-    "context" : "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId" : "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "relatedMessageId": "c8592721-5f8e-4b3f-91ba-57f614bc06f2",
+    "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
+    "messageId": "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
-  "content" : {
-    "requestStatus":"REJECTED",
-    "requestErrors" : [
-      {"message":"We do not process certificates on Sunday"},
-      {"message":"Can not provide certicate for requested locations"}
+  "content": {
+    "requestStatus": "REJECTED",
+    "requestErrors": [
+      {
+        "message": "We do not process certificates on Sunday"
+      },
+      {
+        "message": "Can not provide certicate for requested locations"
+      }
     ],
-    "locationErrors" : [
-        { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is unknown"}]}
+    "locationErrors": [
+      {
+        "bpn": "BPNS000000000003",
+        "locationErrors": [
+          {
+            "message": "Site BPNS000000000003 is unknown"
+          }
+        ]
+      }
     ]
   }
 }
@@ -248,44 +259,46 @@ The Certificate Consumer may want to send a subsequent feedback message.
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp", 
-    "context" : "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
-    "messageId" : "8bf22334-97f2-42b4-afca-f68160707b83 ",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp",
+    "context": "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
+    "messageId": "8bf22334-97f2-42b4-afca-f68160707b83 ",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
   "content": {
-    "businessPartnerNumber" : "BPNL0000000001AB",
-    "enclosedSites" : [ {
-      "areaOfApplication" : "Development, Marketing und Sales and also Procurement for interior components",
-      "enclosedSiteBpn" : "BPNS00000003AYRE"
-    } ],
-    "registrationNumber" : "12 198 54182 TMS",
-    "uploader" : "BPNL0000000001AB",
-    "document" : {
-      "documentID" : "UUID--123456789",
-      "creationDate" : "2024-08-23T13:19:00.280+02:00",
-      "contentType" : "application/pdf",
-      "contentBase64" : "iVBORw0KGgoAAdsfwerTETEfdgd"
+    "businessPartnerNumber": "BPNL0000000001AB",
+    "enclosedSites": [
+      {
+        "areaOfApplication": "Development, Marketing und Sales and also Procurement for interior components",
+        "enclosedSiteBpn": "BPNS00000003AYRE"
+      }
+    ],
+    "registrationNumber": "12 198 54182 TMS",
+    "uploader": "BPNL0000000001AB",
+    "document": {
+      "documentID": "UUID--123456789",
+      "creationDate": "2024-08-23T13:19:00.280+02:00",
+      "contentType": "application/pdf",
+      "contentBase64": "iVBORw0KGgoAAdsfwerTETEfdgd"
     },
-    "validator" : {
-      "validatorName" : "Data service provider X",
-      "validatorBpn" : "BPNL00000007YREZ"
+    "validator": {
+      "validatorName": "Data service provider X",
+      "validatorBpn": "BPNL00000007YREZ"
     },
-    "validUntil" : "2026-01-24",
-    "validFrom" : "2023-01-25",
-    "trustLevel" : "none",
-    "type" : {
-      "certificateVersion" : "2015",
-      "certificateType" : "ISO9001"
+    "validUntil": "2026-01-24",
+    "validFrom": "2023-01-25",
+    "trustLevel": "none",
+    "type": {
+      "certificateVersion": "2015",
+      "certificateType": "iso9001"
     },
-    "areaOfApplication" : "Development, Marketing und Sales and also Procurement for interior components",
-    "issuer" : {
-      "issuerName" : "TÜV",
-      "issuerBpn" : "BPNL133631123120"
+    "areaOfApplication": "Development, Marketing und Sales and also Procurement for interior components",
+    "issuer": {
+      "issuerName": "TÜV",
+      "issuerBpn": "BPNL133631123120"
     }
   }
 }
@@ -316,19 +329,19 @@ Certificate has been received by Certificate Consumer and validation is in progr
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "8284b2fc-6be3-4b90-a22a-a521eff86d0d",
-    "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "relatedMessageId": "8284b2fc-6be3-4b90-a22a-a521eff86d0d",
+    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "messageId": "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
   "content": {
-    "documentId" : "00000000-0000-0000-0000-000000000002",
-    "certificateStatus":"RECEIVED",
-    "locationBpns" : [
+    "documentId": "00000000-0000-0000-0000-000000000002",
+    "certificateStatus": "RECEIVED",
+    "locationBpns": [
       "BPNS000000000001",
       "BPNS000000000002",
       "BPNS000000000003",
@@ -348,19 +361,19 @@ The `locationBpns` can be a mix of sites and addresses.
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "884bb6b1-a845-4844-a87a-e178a703f127",
-    "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "relatedMessageId": "884bb6b1-a845-4844-a87a-e178a703f127",
+    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "messageId": "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
   "content": {
-    "documentId" : "00000000-0000-0000-0000-000000000001",
-    "certificateStatus":"ACCEPTED",
-    "locationBpns" : [
+    "documentId": "00000000-0000-0000-0000-000000000001",
+    "certificateStatus": "ACCEPTED",
+    "locationBpns": [
       "BPNS000000000001",
       "BPNS000000000002",
       "BPNS000000000003",
@@ -378,28 +391,42 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 
 ```json
 {
-  "header" : {
-    "senderBpn" : "BPNL0000000001AB",
-    "relatedMessageId" : "dde834b1-db34-4500-8e2e-d61d7b2bb527",
-    "context" : "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
-    "messageId" : "f67b9853-b714-4427-a8f3-4c53a9822da0",
-    "receiverBpn" : "BPNL0000000002CD",
-    "sentDateTime" : "2025-05-04T00:00:00-07:00",
-    "version" : "3.1.0"
+  "header": {
+    "senderBpn": "BPNL0000000001AB",
+    "relatedMessageId": "dde834b1-db34-4500-8e2e-d61d7b2bb527",
+    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "messageId": "f67b9853-b714-4427-a8f3-4c53a9822da0",
+    "receiverBpn": "BPNL0000000002CD",
+    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "version": "3.1.0"
   },
-  "content" : {
-    "documentId" : "00000000-0000-0000-0000-000000000003",
-    "certificateStatus":"REJECTED",
-    "certificateErrors" : [
-      {"message":"We do not process certificates on Sunday"},
-      {"message":"Certificate has expired in 2024"},
-      {"message":"Certificate was revoked"},
-      {"message":"Unexpected data format"},
-      {"message":"Unexpected language expected English, received Mandarin"},
-      {"message":"Expected PDF, received JPG"},
-      {"message":"Unknown BPNL000000000000"}
+  "content": {
+    "documentId": "00000000-0000-0000-0000-000000000003",
+    "certificateStatus": "REJECTED",
+    "certificateErrors": [
+      {
+        "message": "We do not process certificates on Sunday"
+      },
+      {
+        "message": "Certificate has expired in 2024"
+      },
+      {
+        "message": "Certificate was revoked"
+      },
+      {
+        "message": "Unexpected data format"
+      },
+      {
+        "message": "Unexpected language expected English, received Mandarin"
+      },
+      {
+        "message": "Expected PDF, received JPG"
+      },
+      {
+        "message": "Unknown BPNL000000000000"
+      }
     ],
-    "locationBpns" : [
+    "locationBpns": [
       "BPNS000000000001",
       "BPNS000000000002",
       "BPNS000000000003",
@@ -407,9 +434,23 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
       "BPNA000000000002",
       "BPNA000000000003"
     ],
-    "locationErrors" : [
-      { "bpn":"BPNS000000000002", "locationErrors": [{"message":"Site BPNS000000000002 has been Rejected"}]},
-      { "bpn":"BPNS000000000003", "locationErrors": [{"message":"Site BPNS000000000003 is missing"}]}
+    "locationErrors": [
+      {
+        "bpn": "BPNS000000000002",
+        "locationErrors": [
+          {
+            "message": "Site BPNS000000000002 has been Rejected"
+          }
+        ]
+      },
+      {
+        "bpn": "BPNS000000000003",
+        "locationErrors": [
+          {
+            "message": "Site BPNS000000000003 is missing"
+          }
+        ]
+      }
     ]
   }
 }
@@ -507,7 +548,7 @@ It doesn't matter if the assets are offered in one or in different connectors, a
     "dct:subject": {
       "@id": "cx-taxo:CompanyCertificateNotificationApi"
     },
-    "dct:description": "Offers API for request and pushing certificates as well as sending feedback for provided certificates.",
+    "dct:description": "Offers API for requesting and pushing certificates as well as sending feedback for provided certificates and receiving availability notifications.",
     "cx-common:version": "3.0"
   },
   "dataAddress": {},
@@ -535,49 +576,49 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
 
 ```json
 {
-    "@id": "d195fa2f-e6bc-4cd6-94d4-2bb76e4bb548",
-    "@type": "Asset",
-    "properties": {
-        "dct:type": {
-            "@id": "cx-taxo:Submodel"
-        },
-        "aas:semanticId": {
-            "@id": "urn:samm:io.catenax.business_partner_certificate:3.1.0#BusinessPartnerCertificate"
-        },
-        "dct:certificateType": {
-            "@id": "cx-taxo:ISO9001" 
-        },
-         "dct:enclosedSites": [
-            {
-                "@id": "cx-taxo:BPNS000000000001"
-            },
-            {
-                "@id": "cx-taxo:BPNS000000000002"
-            },
-            {
-                "@id": "cx-taxo:BPNA000000000001"
-            }
-         ],
-        "dct:subject": {
-            "@id": "cx-taxo:CompanyCertificate"
-        },
-        "dct:description": "Business Partner Company Certificate",
-        "cx-common:version": "3.0"
+  "@id": "d195fa2f-e6bc-4cd6-94d4-2bb76e4bb548",
+  "@type": "Asset",
+  "properties": {
+    "dct:type": {
+      "@id": "cx-taxo:Submodel"
     },
-    "dataAddress": {
-      "@type": "DataAddress",
-      "type": "HttpData",
-      "baseUrl": "https://backend-base-url/certificate-management-api-base-path",
-      "proxyQueryParams": "false",
-      "proxyPath": "false",
-      "proxyMethod": "false",
-      "proxyBody": "false"
+    "aas:semanticId": {
+      "@id": "urn:samm:io.catenax.business_partner_certificate:3.1.0#BusinessPartnerCertificate"
     },
-    "@context": {
-        "dct": "http://purl.org/dc/terms/",
-        "cx-taxo": "https://w3id.org/catenax/taxonomy#",
-        "cx-common": "https://w3id.org/catenax/ontology/common#"
-    }
+    "dct:certificateType": {
+      "@id": "cx-taxo:ISO9001"
+    },
+    "dct:enclosedSites": [
+      {
+        "@id": "cx-taxo:BPNS000000000001"
+      },
+      {
+        "@id": "cx-taxo:BPNS000000000002"
+      },
+      {
+        "@id": "cx-taxo:BPNA000000000001"
+      }
+    ],
+    "dct:subject": {
+      "@id": "cx-taxo:CompanyCertificate"
+    },
+    "dct:description": "Business Partner Company Certificate",
+    "cx-common:version": "3.0"
+  },
+  "dataAddress": {
+    "@type": "DataAddress",
+    "type": "HttpData",
+    "baseUrl": "https://backend-base-url/certificate-management-api-base-path",
+    "proxyQueryParams": "false",
+    "proxyPath": "false",
+    "proxyMethod": "false",
+    "proxyBody": "false"
+  },
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "cx-taxo": "https://w3id.org/catenax/taxonomy#",
+    "cx-common": "https://w3id.org/catenax/ontology/common#"
+  }
 }
 ```
 
@@ -775,7 +816,6 @@ Applying these rules to the supported list of certificate types leads to the fol
 | AEO           | aeo         |
 | CTPAT         | ctpat       |
 | VDA6.4        | vda64       |
-
 
 #### 3.2.3 REGISTRATION AND ISSUING
 
