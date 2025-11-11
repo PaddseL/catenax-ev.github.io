@@ -12,67 +12,22 @@ tags:
 components:
   schemas:
     Header:
-      type: object
-      description: Characteristic describing the common shared aspect Message Header of an incoming company certificate notification
-      required:
-      - context
-      - messageId
-      - receiverBpn
-      - senderBpn
-      - sentDateTime
-      - version
-      properties:
-        senderBpn:
-          pattern: "^BPNL[a-zA-Z0-9]{12}$"
-          type: string
-          description: The Business Partner Number of the sending party
-          examples:
-            - BPNL0000000001AB
-        context:
-          type: string
-          description: The context defines the type of company certificate message
-          examples:
-            - CompanyCertificateManagement-CCMAPI-Request:1.0.0
-          enum:
-          - CompanyCertificateManagement-CCMAPI-Request:1.0.0
-          - CompanyCertificateManagement-CCMAPI-Push:1.0.0
-          - CompanyCertificateManagement-CCMAPI-Feedback:1.0.0
-          - CompanyCertificateManagement-CCMAPI-Available:1.0.0
-        messageId:
-          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-          type: string
-          description: A UUIDv4 to uniquely identify a message
-          examples:
-            - urn:uuid:24c2eaf5-c43a-4c31-8180-801cd7ac696e
-        receiverBpn:
-          pattern: "^BPNL[a-zA-Z0-9]{12}$"
-          type: string
-          description: The Business Partner Number of the receiving party
-          examples:
-            - BPNL0000000002CD
-        sentDateTime:
-          type: string
-          description: Time zone aware timestamp holding the date and the time the message was sent by the sending party. The value MUST be formatted according to the ISO 8601 standard
-          format: date-time
-          examples:
-            - 2024-10-07T10:15:00Z
-        expectedResponseBy:
-          type: string
-          description: Time zone aware timestamp holding the date and time by which the sending party expects a certain type of response from the receiving party
-          format: date-time
-          examples:
-            - 2024-10-07T10:15:00Z
-        relatedMessageId:
-          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-          type: string
-          description: Unique ID identifying a message somehow related to the current one
-          examples:
-            - urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
-        version:
-          type: string
-          description: The version number defining the structure and the semantics of the message's header
-          examples:
-            - 3.1.0
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/eclipse-tractusx/sldt-semantic-models/refs/heads/main/io.catenax.shared.message_header/3.0.0/gen/MessageHeaderAspect-schema.json#/properties/header'
+        - type: object
+          required:
+            - context
+          properties:
+            context:
+              type: string
+              description: The context defines the type of company certificate message
+              examples:
+                - CompanyCertificateManagement-CCMAPI-Request:1.0.0
+              enum:
+              - CompanyCertificateManagement-CCMAPI-Request:1.0.0
+              - CompanyCertificateManagement-CCMAPI-Push:1.0.0
+              - CompanyCertificateManagement-CCMAPI-Feedback:1.0.0
+              - CompanyCertificateManagement-CCMAPI-Available:1.0.0
 
     FeedbackUrlHeader:
       allOf:
