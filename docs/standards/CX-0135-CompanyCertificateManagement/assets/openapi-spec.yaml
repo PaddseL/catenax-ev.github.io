@@ -107,8 +107,6 @@ components:
               items:
                 $ref: '#/components/schemas/BpnLocation'
 
-
-
     CertificateRequestFinishedResponse:
       type: object
       required:
@@ -185,8 +183,6 @@ components:
       examples:
         - "BPNA000000000001"
         - "BPNS000000000002"
-
-
 
     CertificatePush:
       type: object
@@ -302,6 +298,7 @@ components:
         content:
           requestStatus: "COMPLETED"
           documentId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba"
+
     CertificateRequestRejected:
       summary: A response for a rejected certificate request process
       value:
@@ -321,6 +318,7 @@ components:
             - bpn: "BPNS000000000003"
               locationErrors:
                 - message: "Site BPNS000000000003 is unknown"
+
     CertificateAcceptedFeedback:
       summary: Consumer accepts received certificate
       value:
@@ -336,6 +334,7 @@ components:
           certificateStatus: "ACCEPTED"
           locationBpns:
             - "BPNS000000000003"
+
     CertificateReceivedFeedback:
       summary: Consumer received certificate
       value:
@@ -351,6 +350,7 @@ components:
           certificateStatus: "RECEIVED"
           locationBpns:
             - "BPNS000000000003"
+
     CertificateRejectedFeedback:
       summary: Consumer rejected received certificate
       value:
@@ -390,8 +390,6 @@ components:
           locationBpns:
             - "BPNS000000000003"
 
-
-
 paths:
   /companycertificate/request:
     post:
@@ -422,7 +420,6 @@ paths:
                   $ref: '#/components/examples/CertificateRequestCompleted'
                 Rejected:
                   $ref: '#/components/examples/CertificateRequestRejected'
-
         '400':
           description: Request malformed and can not be processed
         '500':
