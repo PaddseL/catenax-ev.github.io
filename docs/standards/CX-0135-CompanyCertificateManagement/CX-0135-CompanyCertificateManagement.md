@@ -131,7 +131,7 @@ This request can be sent by the Certificate Consumer continuously, for updates o
   },
   "content": {
     "certifiedBpn": "BPNL00000003AYRE",
-    "certificateType": "ISO9001",
+    "certificateType": "iso9001",
     "locationBpns": [
       "BPNA000000000001",
       "BPNA000000000002",
@@ -586,7 +586,7 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
       "@id": "urn:samm:io.catenax.business_partner_certificate:3.1.0#BusinessPartnerCertificate"
     },
     "dct:certificateType": {
-      "@id": "cx-taxo:ISO9001"
+      "@id": "cx-taxo:iso9001"
     },
     "dct:enclosedSites": [
       {

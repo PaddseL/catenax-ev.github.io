@@ -92,7 +92,7 @@ components:
               type: string
               description: The type of certificate the certificate consumer requests
               examples:
-                - "ISO9001"
+                - "iso9001"
             locationBpns:
               type: array
               description: The BPNs of the site or address locations for which the certificate consumer requests the certificate
