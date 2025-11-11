@@ -173,7 +173,7 @@ components:
     BpnLocation:
       type: string
       description: The BPNA or BPNS of either an address or site location
-      pattern: "^BPN[A|S][A-Z0-9]{11}$"
+      pattern: "^BPN[AS][A-Z0-9]{12}$"
       examples:
         - "BPNA000000000001"
         - "BPNS000000000002"
@@ -295,7 +295,7 @@ components:
           requestStatus: "COMPLETED"
           documentId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba"
     CertificateRequestRejected:
-      summary: A response for a rejected certificated request process
+      summary: A response for a rejected certificate request process
       value:
         header:
           senderBpn: "BPNL0000000001AB"
