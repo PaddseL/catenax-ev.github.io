@@ -38,7 +38,7 @@ components:
           enum:
             - "CompanyCertificateManagement-CCMAPI-Push:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
-            - "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+            - "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
             - "CompanyCertificateManagement-CCMAPI-Available:1.0.0"
         receiverBpn:
           type: string
@@ -371,7 +371,7 @@ components:
         header:
           senderBpn: "BPNL0000000001AB"
           messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Pull:1.0.0"
+          context: "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
           receiverBpn: "BPNL0000000002CD"
           sentDateTime: "2025-05-04T00:00:00-07:00Z"
           version: "3.1.0"
@@ -384,7 +384,7 @@ components:
         header:
           senderBpn: "BPNL0000000001AB"
           messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Pull:1.0.0"
+          context: "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
           receiverBpn: "BPNL0000000002CD"
           sentDateTime: "2025-05-04T00:00:00-07:00Z"
           version: "3.1.0"
@@ -529,7 +529,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CertificateStatus'
+              $ref: '#/components/schemas/CertificateFeedback'
             examples:
               Received:
                 $ref: '#/components/examples/CertificateReceivedFeedback'
@@ -539,7 +539,7 @@ paths:
                 $ref: '#/components/examples/CertificateRejectedFeedback'
       responses:
         '200':
-          description: Status updated successfully
+          description: Feedback updated successfully
 
   /companycertificate/available:
     post:
@@ -555,4 +555,3 @@ paths:
       responses:
         '200':
           description: Notification processed successfully
-
