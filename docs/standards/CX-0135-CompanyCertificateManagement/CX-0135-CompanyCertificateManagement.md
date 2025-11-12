@@ -115,7 +115,6 @@ This section introduces the certificate management notification API which is fur
 ##### 2.1.1.1 Company Certificate Request
 
 The Certificate Consumer is requesting a specific certificate from the Certificate Provider.
-This request can be sent by the Certificate Consumer continuously, for updates on the request state on Certificate Provider side.
 
 ![alt text](images/state-machine-certificate-distributor.svg "Certificate Request API State Machine")
 
