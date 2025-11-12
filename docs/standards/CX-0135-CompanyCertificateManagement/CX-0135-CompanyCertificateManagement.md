@@ -27,7 +27,7 @@ This standard is relevant to the following parties:
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
 
-The updated standard introduces several enhancements over the previous version. One of the key changes is the definition of an OpenAPI. This will allow companies to proactively request certificates and provide feedback on their status. For the notification's requests, the Industry Core Standard (CX-0151 Industry Core: Basics v.1.0.0) has been adopted.
+The updated standard introduces several enhancements over the previous version. One of the key changes is the definition of an OpenAPI. This will allow companies to proactively request certificates and provide feedback on their status. For the notification's requests, the Industry Core Standard ([CX-0151:1.0.0 Industry Core: Basics](https://catenax-ev.github.io/docs/standards/CX-0151-IndustryCoreBasics)) has been adopted.
 
 Another important update involves a correction to the data model. The enclosedSiteBpn trait now accurately supports both BPNS and BPNA values, resolving a previous issue.
 Resolved an issue in the usage policy.
@@ -42,7 +42,7 @@ The following company certificate use cases are supported in this release:
 
 1. Certificate Provider wants to publish a certificate / Certificate Consumer wants to discover a published certificate.
 2. Certificate Consumer wants to request a certificate from a specific Certificate Provider
-3. Certificate Consumer wants to notify a Certificate Provider of acceptance or rejection of a certificate published in #1 via a feedback message
+3. Certificate Consumer wants to notify a Certificate Provider of acceptance or rejection of a consumed certificate via a status message
 4. Certificate Provider wants to notify a Certificate Consumer of the availability of a new certificate asset
 
 For avoidance of the doubt, we are not replacing the existing publication semantic model.
@@ -97,9 +97,9 @@ Use cases to provide certificates (from who initiates communication, negotiation
 - Certificate Consumer -> Certificate Provider: Company Certificate Pull
 - Certificate Provider -> Certificate Consumer: Company Certificate Push
 
-Use case to give feedback for provided certificates:
+Use case to give feedback on the status for consumed certificates:
 
-- Certificate Consumer -> Certificate Provider: Company Certificate Status (Accepted, Rejected or Received)
+- Certificate Consumer -> Certificate Provider: Company Certificate Status (Received, Accepted, or Rejected)
 
 Use case to notify about availability of certificates:
 
@@ -159,7 +159,6 @@ This request can be sent by the Certificate Consumer continuously, for updates o
 The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
 HTTP Status Codes 202, 400 and 500 do not come with a response body.
 
-
 ##### 2.1.1.1.2 HTTP Response Body for HTTP Code 200, Status: IN PROGRESS
 
 Case: Certificate Request Still In Process
@@ -182,7 +181,7 @@ Case: Certificate Request Still In Process
 
 ##### 2.1.1.1.3 HTTP Response Body for HTTP Code 200, Status: COMPLETED
 
-Finished Processing and Certificate Available in EDC.
+Finished Processing and Certificate available in EDC.
 The content body also provides the documentId of the certificate.
 This simplifies finding the correct offer for the requested certificate.
 
@@ -252,7 +251,7 @@ The error message is free text.
 
 Certificate is pushed by the Certificate Provider to the Certificate Consumer.
 The enclosed BPNs can be a mix of sites and addresses.
-The Certificate Consumer may want to send a subsequent feedback message.
+The Certificate Consumer may want to send a subsequent status message.
 
 `POST /companycertificate/push`
 
@@ -301,28 +300,29 @@ The Certificate Consumer may want to send a subsequent feedback message.
     }
   }
 }
+
 ```
-The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects the feedback of the Certificate Consumer.
+The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
 The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
 >**Push header `senderFeedbackUrl` explanation**:
->This information is intended as a temporary solution to support the unique identification of multiple feedback endpoints across multiple EDCs belonging to one legal entity. 
+>This information is intended as a temporary solution to support the unique identification of multiple status endpoints across multiple EDCs belonging to one legal entity.
 >The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs. 
 >Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution. 
 >A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
 
->**DocumentID spelling**:
-> Please mind that in contrast to other requests the field `documentID` in the push notification request is spelled with a capital `D`.
+>**`documentID` spelling**:
+> Please mind that in contrast to other requests the field `documentID` in the push notification request is spelled with a capital `D` due to the spelling in the [aspect model](#31-aspect-model-businesspartnercertificate).
 
-##### 2.1.1.3 Company Certificate Feedback
+##### 2.1.1.3 Company Certificate Status
 
-`POST /companycertificate/feedback`
+`POST /companycertificate/status`
 
-This API is used by the Certificate Consumer to give a feedback to the Certificate Provider, thus either accepting or rejecting the provided certificate.
-This is regardless of whether the certificate was [pulled](#2111-company-certificate-request) or [pushed](#2112-company-certificate-push).
+This API is used by the Certificate Consumer to give feedback on the status to the Certificate Provider, thus either accepting or rejecting the provided certificate.
+This is regardless of whether the certificate was [pulled](#2152-pull-mechanism) or [pushed](#2151-push-mechanism).
 
-##### 2.1.1.3.1 Company Certificate Feedback: Received
+##### 2.1.1.3.1 Company Certificate Status: Received
 
 Certificate has been received by Certificate Consumer and validation is in progress.
 
@@ -330,7 +330,7 @@ Certificate has been received by Certificate Consumer and validation is in progr
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId": "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
     "receiverBpn": "BPNL0000000002CD",
     "sentDateTime": "2025-05-04T00:00:00-07:00",
@@ -351,7 +351,7 @@ Certificate has been received by Certificate Consumer and validation is in progr
 }
 ```
 
-##### 2.1.1.3.2 Company Certificate Feedback: Accepted
+##### 2.1.1.3.2 Company Certificate Status: Accepted
 
 Certificate is accepted. 
 The documentId **MUST** match the documentId that was communicated by the certificate provider.
@@ -361,7 +361,7 @@ The `locationBpns` can be a mix of sites and addresses.
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId": "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
     "receiverBpn": "BPNL0000000002CD",
     "sentDateTime": "2025-05-04T00:00:00-07:00",
@@ -382,15 +382,15 @@ The `locationBpns` can be a mix of sites and addresses.
 }
 ```
 
-##### 2.1.1.3.3 Company Certificate Feedback: Rejected
+##### 2.1.1.3.3 Company Certificate Status: Rejected
 
-Certificate is rejected by Certificate Consumer with one or multiple reasons.
+Certificate is rejected by the Certificate Consumer with one or multiple reasons.
 
 ```json
 {
   "header": {
     "senderBpn": "BPNL0000000001AB",
-    "context": "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0",
+    "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
     "messageId": "f67b9853-b714-4427-a8f3-4c53a9822da0",
     "receiverBpn": "BPNL0000000002CD",
     "sentDateTime": "2025-05-04T00:00:00-07:00",
@@ -452,10 +452,10 @@ Certificate is rejected by Certificate Consumer with one or multiple reasons.
 }
 ```
 
-##### 2.1.1.3 Company Certificate Available
+##### 2.1.1.4 Company Certificate Available
 
 The Certificate Consumer is notified that a certificate is available.
-The Certificate Consumer may want to get the certificate via the pull mechanism.
+The Certificate Consumer may want to consume the certificate via the pull mechanism.
 
 ```json
 {
@@ -501,7 +501,7 @@ The following sections detail how notification API and certificate assets should
 Please note the depicted examples show `@id` fields with random example UUIDs.
 Every dataspace participant may use their individual random uuid.
 
-##### 2.1.4.1  Notification API
+##### 2.1.4.1 Notification API
 
 > *This section is normative*
 
@@ -512,26 +512,24 @@ In turn, the Certificate Consumer **MAY** offer an asset to expose an API for th
 
 The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name of the certificate management API as defined in the Catena-X taxonomy published under [[taxonomy]](https://w3id.org/catenax/taxonomy).
 
-| **Type**       | **Subject**                               | **Version** | **Description**                                                                                                                                                                                                                                |
-|----------------|-------------------------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateNotificationApi | 3.0         | Offers *Certificate Notification API* for [requesting](#2111-company-certificate-request) and [pushing](#2112-company-certificate-push) certificates as well as send [feedback](#2113-company-certificate-feedback) for provided certificates. |
-
+| **Type**       | **Subject**                                         | **Version** | **Description** |
+|----------------|-----------------------------------------------------|-------------|-----------------|
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateManagementNotificationApi | 3.0         | Offers *Certificate Notification API* for [requesting](#2111-company-certificate-request) and [pushing](#2112-company-certificate-push) certificates as well as sending feedback on the [status](#2113-company-certificate-status) for provided certificates and receiving [availability](#2114-company-certificate-available) notifications. |
 
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
 *Example*: it is possible to have these assets available next to one-another:
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```, and 
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "2.0"}```
+- ```{ "dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```, 
+- ```{ "dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "2.0" }```
 
 since they either differ in the value of the version or the subject. 
 But it would not be possible to have two of the same subject and the same version.
 
 *Example that is not allowed:*
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```
-- ```{"dct:subject"."@id": "cx-taxo:CompanyCertificateNotificationApi", "cx-common:version": "3.0"}```
+- ```{"dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```,
+- ```{"dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```
 
 It doesn't matter if the assets are offered in one or in different connectors, as long as they belong to the same BPNL this is not allowed.
-
 
 **Example Certificate Notification API**
 ```json
@@ -543,9 +541,9 @@ It doesn't matter if the assets are offered in one or in different connectors, a
       "@id": "cx-taxo:CCMAPI"
     },
     "dct:subject": {
-      "@id": "cx-taxo:CompanyCertificateNotificationApi"
+      "@id": "cx-taxo:CompanyCertificateManagementNotificationApi"
     },
-    "dct:description": "Offers API for requesting and pushing certificates as well as sending feedback for provided certificates and receiving availability notifications.",
+    "dct:description": "Offers Certificate Notification API for requesting and pushing certificates as well as sending feedback on the status for provided certificates and receiving availability notifications.",
     "cx-common:version": "3.0"
   },
   "dataAddress": {},
@@ -557,17 +555,16 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 }
 ```
 
-
 > The **API assets** are identified by the combination of `dct:subject` and `cx-common:version`.
 > When searching the EDC catalog for a specific API, make use of those properties in the catalog filter.
 
-##### 2.1.4.2  Certificates
+##### 2.1.4.2 Certificates
 
 The certificate assets **MUST** be created by the Certificate Provider in their connector catalog to be consumed by the Certificate Consumer.
 The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type).
 The property enclosedSites **MUST** contain all BPNSs for which the certificate is valid.
-The subject **MUST** reference cx-taxo:CompanyCertificate.
-Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
+The subject **MUST** reference `cx-taxo:CompanyCertificate`.
+Additionally, the assets **MUST** contain the type `cx-taxo:Submodel` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
 
 **Example Certificate EDC Asset:**
 
@@ -627,19 +624,20 @@ Additionally, the assets **MUST** contain the type ```cx-taxo:Submodel``` and th
 Certificate Provider & Certificate Consumer:
 - Certificate Provider **MUST** support at least one of the certificate provision mechanisms (push and/or pull mechanism)
 - Certificate Provider **MUST** expose company certificates in their catalog when using the pull mechanism.
-- Certificate Provider **MUST** set the correct access policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
+- Certificate Provider **MUST** set the correct access and usage policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
 
-- Certificate Consumer **MAY** implement the [push endpoint](#2112-company-certificate-push) for the Certificate Provider to push certificates to, but **MUST** set the correct access policy on the offer, when choosing to do so.
-- Certificate Consumer **MAY** send a certificate request via POST /companycertificate/request which **MUST** be replied to by the Certificate Provider according to the endpoint definitions.
-- Certificate Consumer **MAY** send a notification of acceptance or rejection via POST /companycertificate/feedback.
+- Certificate Consumer **MAY** implement the [push endpoint](#2112-company-certificate-push) for the Certificate Provider to push certificates to, but **MUST** set the correct access and usage policy on the offer, when choosing to do so.
+- Certificate Consumer **MAY** send a certificate request via `POST /companycertificate/request` which **MUST** be replied to by the Certificate Provider according to the endpoint definitions.
+- Certificate Consumer **MAY** send a notification of reception when the certificate validation has started via `POST /companycertificate/status`.
+- Certificate Consumer **MAY** send a notification of acceptance or rejection via `POST /companycertificate/status`.
   Certificate Provider **MUST** respond according to the [error handling](#212-error-handling).
 
-- Certificate Provider **MAY** send a notification of availability via POST /companycertificate/available after the referenced company certificate is exposed in their catalog.
+- Certificate Provider **MAY** send a notification of availability via `POST /companycertificate/available` after the referenced company certificate is exposed in their catalog.
   Certificate Consumer **MUST** respond according to the [error handling](#212-error-handling) and **SHOULD** get the new certificate via the pull mechanism.
-- Certificate Consumer **MAY** implement the [available endpoint](#2113-company-certificate-available) for the Certificate Provider to send availability notifications to, but **MUST** set the correct access policy on the offer, when choosing to do so.
+- Certificate Consumer **MAY** implement the [available endpoint](#2113-company-certificate-available) for the Certificate Provider to send availability notifications to, but **MUST** set the correct access and usage policy on the offer, when choosing to do so.
 
 Business Application Provider:
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the feedback mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the status and available mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
@@ -648,7 +646,7 @@ Business Application Provider:
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Consumer via EDC (Eclipse Data Connector) components.
 The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  
-The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a feedback message which is pushed to the provider.
+The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a status message which is pushed to the provider.
 
 ##### 2.1.5.2 PULL Mechanism
 
@@ -658,17 +656,17 @@ The Certificate PULL Diagram describes the process of Consumer retrieving a cert
 It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog. 
 The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). 
 The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. 
-Once retrieved, the Backend Certificate Consumer processes the certificate and sends a Feedback Message to confirm the status.
+Once retrieved, the Backend Certificate Consumer processes the certificate and sends a status message to confirm the status.
 
 ##### 2.1.5.3 AVAILABLE notification followed by PULL mechanism
 
-After the Certificate Provider has created a Certificate Asset with corresponding contract definition in the EDC Catalog, the Certificate Provider sends a Certificate Available Notification to the Certificate Consumer.
+After the Certificate Provider has created a Certificate Asset with the corresponding contract definition in the EDC Catalog, the Certificate Provider sends a Certificate Available Notification to the Certificate Consumer.
 The Certificate Consumer uses the above described PULL mechanism to get the certificate data.
 This reduces the Certificate Consumers need for active checks for missing certificates or certificate updates and enables access to the latest certificate data.
 
 ##### 2.1.6 Usage Policy
 
-All assets included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in version 1.0.
+All offers included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in version 1.0.
 The use-case introduces the following usage purpose:
 
 - **`cx.ccm.base:1:`** *The exchanged business partner certificates are used for the purpose of verification and validation of the existence of a certification.*
@@ -744,7 +742,7 @@ The semantic model has the unique identifier
 
 > urn:samm:io.catenax.business_partner_certificate:3.1.0
 
-This identifier **MUST** be used by the data provider to define the semantics of the data being transferred.
+This identifier **MUST** be used by the Certificate Provider to define the semantics of the data being transferred.
 
 #### 3.1.3 FORMATS OF SEMANTIC MODEL
 

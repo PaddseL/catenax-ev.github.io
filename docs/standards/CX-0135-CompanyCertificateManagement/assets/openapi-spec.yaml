@@ -26,7 +26,7 @@ components:
               enum:
               - CompanyCertificateManagement-CCMAPI-Request:1.0.0
               - CompanyCertificateManagement-CCMAPI-Push:1.0.0
-              - CompanyCertificateManagement-CCMAPI-Feedback:1.0.0
+              - CompanyCertificateManagement-CCMAPI-Status:1.0.0
               - CompanyCertificateManagement-CCMAPI-Available:1.0.0
 
     FeedbackUrlHeader:
@@ -36,7 +36,7 @@ components:
           properties:
             senderFeedbackUrl:
               type: string
-              description: URL of the EDC DSP endpoint to send feedback to
+              description: URL of the EDC DSP endpoint to send feedback on the status to
               examples:
                 - https://domain.tld/path/to/edc/api/v1/dsp
 
@@ -189,7 +189,7 @@ components:
           examples:
             - Site BPNS000000000003 is unknown
 
-    CertificateFeedback:
+    CertificateStatus:
       type: object
       required:
         - header
@@ -283,13 +283,13 @@ components:
               locationErrors:
                 - message: "Site BPNS000000000003 is unknown"
 
-    CertificateAcceptedFeedback:
+    CertificateAcceptedStatus:
       summary: Consumer accepts received certificate
       value:
         header:
           senderBpn: "BPNL0000000001AB"
           messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
           receiverBpn: "BPNL0000000002CD"
           sentDateTime: "2025-05-04T00:00:00-07:00Z"
           version: "3.1.0"
@@ -299,13 +299,13 @@ components:
           locationBpns:
             - "BPNS000000000003"
 
-    CertificateReceivedFeedback:
+    CertificateReceivedStatus:
       summary: Consumer received certificate
       value:
         header:
           senderBpn: "BPNL0000000001AB"
           messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
           receiverBpn: "BPNL0000000002CD"
           sentDateTime: "2025-05-04T00:00:00-07:00Z"
           version: "3.1.0"
@@ -315,13 +315,13 @@ components:
           locationBpns:
             - "BPNS000000000003"
 
-    CertificateRejectedFeedback:
+    CertificateRejectedStatus:
       summary: Consumer rejected received certificate
       value:
         header:
           senderBpn: "BPNL0000000001AB"
           messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Feedback:1.0.0"
+          context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
           receiverBpn: "BPNL0000000002CD"
           sentDateTime: "2025-05-04T00:00:00-07:00Z"
           version: "3.1.0"
@@ -391,7 +391,7 @@ paths:
 
   /companycertificate/push:
     post:
-      summary: Notify that a certificate is available along with its content
+      summary: Certificate provider sends a certificate to the certificate consumer
       tags:
         - Certificate Consumer
       requestBody:
@@ -404,9 +404,9 @@ paths:
         '200':
           description: Notification processed successfully
 
-  /companycertificate/feedback:
+  /companycertificate/status:
     post:
-      summary: Send feedback to an obtained certificate
+      summary: Certificate consumer sends feedback on the status of a consumed certificate to the certificate provider
       tags:
         - Certificate Provider
       requestBody:
@@ -414,17 +414,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CertificateFeedback'
+              $ref: '#/components/schemas/CertificateStatus'
             examples:
               Received:
-                $ref: '#/components/examples/CertificateReceivedFeedback'
+                $ref: '#/components/examples/CertificateReceivedStatus'
               Accepted:
-                $ref: '#/components/examples/CertificateAcceptedFeedback'
+                $ref: '#/components/examples/CertificateAcceptedStatus'
               Rejected:
-                $ref: '#/components/examples/CertificateRejectedFeedback'
+                $ref: '#/components/examples/CertificateRejectedStatus'
       responses:
         '200':
-          description: Feedback updated successfully
+          description: Status updated successfully
 
   /companycertificate/available:
     post:
