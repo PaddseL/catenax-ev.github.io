@@ -560,11 +560,11 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 
 ##### 2.1.4.2 Certificates
 
-The certificate assets **MUST** be created by the Certificate Provider in their connector catalog to be consumed by the Certificate Consumer.
-The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type).
-The property enclosedSites **MUST** contain all BPNSs for which the certificate is valid.
-The subject **MUST** reference `cx-taxo:CompanyCertificate`.
-Additionally, the assets **MUST** contain the type `cx-taxo:Submodel` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
+- The certificate assets **MUST** be created by the Certificate Provider in their connector catalog to be consumed by the Certificate Consumer when using the pull mechanism.
+- The property certificateType **MUST** reference the type of the certificate as defined in [3.2.2 Certificate Type](#322-certificate-type).
+- The property enclosedSites **MUST** contain all BPNSs and BPNAs for which the certificate is valid.
+- The subject **MUST** reference `cx-taxo:CompanyCertificate`.
+- Additionally, the assets **MUST** contain the type `cx-taxo:Submodel` and the semanticId specified in [3.1.2 Business Partner Company Certificate Submodel](#312-business-partner-company-certificate-submodel).
 
 **Example Certificate EDC Asset:**
 
