@@ -354,7 +354,7 @@ Certificate has been received by Certificate Consumer and validation is in progr
 
 ##### 2.1.1.3.2 Company Certificate Status: Accepted
 
-Certificate is accepted. 
+Certificate is accepted.
 The documentId **MUST** match the documentId that was communicated by the certificate provider.
 The `locationBpns` can be a mix of sites and addresses.
 
