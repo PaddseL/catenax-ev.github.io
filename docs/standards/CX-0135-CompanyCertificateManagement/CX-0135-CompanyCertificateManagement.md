@@ -53,11 +53,12 @@ For avoidance of the doubt, we are not replacing the existing publication semant
 
 List for which roles the standard is relevant:
 
-- Data Provider and Consumer
+- Certificate Provider and Consumer
 - Business Application Provider
 - Enablement Service Provider
 
-This standard applies to business application providers and enablement service providers who aim to offer a solution for managing and exchanging company certificates, and returning them to customers. It is also important for data providers and consumers who need to manage and exchange certificates through a solution provider.
+This standard applies to business application providers and enablement service providers who aim to offer a solution for managing and exchanging company certificates, and returning them to customers.
+It is also important for Certificate Providers and Consumers who need to manage and exchange certificates through a solution provider.
 
 ### 1.2 CONTEXT AND ARCHITECTURE FIT
 
@@ -93,16 +94,16 @@ Today, Certificate Consumer do not have a way to request certificates from a Cer
 
 Use cases to provide certificates (from who initiates communication, negotiation and data transfer):
 
-- Certificate Consumer -> Certificate Provider : Company Certificate Pull
-- Certificate Provider -> Certificate Consumer : Company Certificate Push
+- Certificate Consumer -> Certificate Provider: Company Certificate Pull
+- Certificate Provider -> Certificate Consumer: Company Certificate Push
 
 Use case to give feedback for provided certificates:
 
-- Certificate Consumer -> Certificate Provider : Company Certificate Status (Accepted, Rejected or Received)
+- Certificate Consumer -> Certificate Provider: Company Certificate Status (Accepted, Rejected or Received)
 
 Use case to notify about availability of certificates:
 
-- Certificate Provider -> Certificate Consumer : Company Certificate Available
+- Certificate Provider -> Certificate Consumer: Company Certificate Available
 
 ### 2.1 API Specification
 
