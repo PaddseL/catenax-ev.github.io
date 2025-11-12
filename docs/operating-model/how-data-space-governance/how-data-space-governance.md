@@ -15,7 +15,7 @@ However, this vision is complex: companies at various stages of the automotive v
 
 The standards of our Catena-X data ecosystem define how the exchange of data and information in our network works. They are the basis for ensuring that the technologies, components, policies, and processes used are developed and operated according to uniform rules. All standards developed for the Catena-X data ecosystem are based on the technological and industry-specific requirements of the automotive industry.
 
-The Catena-X Association publishes standards for generic core and enabling services as well as for domain-specific business applications (see KITs Chapter [KITs - Keep It Together](./../what-service-map/what-service-map.md#kits--keep-it-together)). These standards and artifacts form the basis for the development and operation of software components in the Catena-X network to ensure interoperability and data sovereignty between different software components and providers. All relevant standards are accessible in the [Catena-X standard library](https://catenax-ev.github.io/docs/standards/overview).
+The Catena-X Association publishes standards for generic core and enabling services as well as for domain-specific business applications (see KITs Chapter [KITs - Keep It Together](./../what-service-map/what-service-map.md#kits---keep-it-together)). These standards and artifacts form the basis for the development and operation of software components in the Catena-X network to ensure interoperability and data sovereignty between different software components and providers. All relevant standards are accessible in the [Catena-X standard library](https://catenax-ev.github.io/docs/standards/overview).
 
 ### How do we standardize?
 
@@ -45,7 +45,7 @@ An overview of the certification process is depicted in Figure [Catena-X Certifi
 As part of the certification, the data space participant commits to listing Catena-X solutions on the Catena-X Marketplace in accordance with the mandatory requirement of the Operating Model. This includes adherence to governance components such as Trust ID and related mechanisms. This requirement also applies retroactively to already onboarded partners. However, internal systems that are used solely within a company and are not intended for external provisioning do not require listing on a Catena-X marketplace. Catena-X does not allow the provision of solutions without a marketplace listing.
 For clarification: All solutions that exchange data within the Catena-X data space and pass it on to other Catena-X users must be certified. A list of all currently certified solutions can be made available through the association upon request. All commercial offers must be listed on a marketplace.
 
-The *Catena-X Conformity Assessment Handbook* provides a detailed description of how Catena-X conducts conformity assessment through the Conformity Assessment Bodies. The most current version can always be found on the [Catena-X Library](https://catenax-ev.github.io/docs/next/certification/certification).
+The *Catena-X Conformity Assessment Handbook* provides a detailed description of how Catena-X conducts conformity assessment through the Conformity Assessment Bodies. The most current version can always be found on the [Catena-X Library](https://catena-x.net/ecosystem/certification/).
 
 Prerequisite of any certification is the registration / onboarding of the participant who wants to get certified. The registration (see Chapter [Registration](./../how-data-space-operations/how-data-space-operations.md#registration)) is ideally done before any certification request or latest started with the start of the certification request.
 
@@ -54,7 +54,7 @@ Prerequisite of any certification is the registration / onboarding of the partic
 Certifications and qualifications at Catena-X can be obtained for different types of services or solutions. The certifications are split into different "roles" indicating the type of relationship to Catena-X, as well as the"module", the specific service provided. The roles of certified companies vary between the provision of a key part of infrastructure or service ( Enablement Service Provider or Core Service provider) and complementing further solutions or services to the data space. In line with this role differentiation, the certifications have a different scope and different Catena-X standards associated with them.
  Companies shall always mention the specific role and module they have been awarded the certification in e.g. Connector, Traceability, MaaS... .
 
-![Certification](./assets/certification.svg)  
+![Certification](./assets/modulares_system_overview.svg)  
 *Certification System*
 
  The following figure details the standards applicable to each of the six roles and matching modules.
@@ -62,6 +62,8 @@ Certifications and qualifications at Catena-X can be obtained for different type
 ![Modular System: Use Cases](./assets/modular_system1.svg)
 
 ![Modular System: Data Space Roles](./assets/modular_system2.svg)
+
+![Modular System: Data Space Roles](./assets/modular_system3.svg)
 
 ### Certification updates
 
@@ -87,7 +89,7 @@ If an company-internal business application meets either of these criteria, Cate
 #### 2. No Catena-X Business Applications without listing on a Certified Catena-X Marketplace
 
 Catena-X is built on trust. All Catena-X certified business applications and services must be listed on a certified Catena-X marketplace.
-Catena-X marketplace providers (i.e. CSP-A) verify that the listed business applications and services have a valid certification issued by a CAB and therefore comply with the Catena-X standards. As already mentioned in [How do we certify](https://catenax-ev.github.io/docs/next/operating-model/how-data-space-governance#why-do-we-certify), internal systems that are used solely within a company and are not intended for external provisioning do not require listing on a Catena-X marketplace. Catena-X does not allow the provision of solutions without a marketplace listing.
+Catena-X marketplace providers (i.e. CSP-A) verify that the listed business applications and services have a valid certification issued by a CAB and therefore comply with the Catena-X standards. As already mentioned in [How do we certify](./how-data-space-governance.md#how-do-we-certify), internal systems that are used solely within a company and are not intended for external provisioning do not require listing on a Catena-X marketplace. Catena-X does not allow the provision of solutions without a marketplace listing.
 
 In the future, there will be multiple CSP-As that enable business applications and services to be verified and listed on various marketplaces, as mentioned in chapter [Increase Decentralization of Core Services](./../outlook/outlook.md#increase-decentralization-of-core-services).
 
@@ -128,7 +130,7 @@ Certified operating companies are companies certified for operating core service
 **Certified Provider**  
 ![Certified Provider](./assets/CX_Logo_Certified-Provider_CLR_RGB_pos_16x9@300.jpg)
 
-"Provider" is defined by standard [CX-0008](https://catenax-ev.github.io/docs/next/standards/CX-0008-RelevantStandardsForConformityAssessments) for the general participation in the data ecosystem depending on their role.
+Certified Providers are companies that have been certified to deliver or operate services as defined in the [Service Map](../what-service-map/what-service-map.md) for the general participation in the data ecosystem depending on their role.
 
 **Certified Solution**  
 ![Certified Solution](./assets/CX_Logo_Certified-Solution_CLR_RGB_pos_16x9@300.jpg)
@@ -145,7 +147,7 @@ Different from Catena-X Certification, Catena-X qualification is a label held by
  Companies with more than 5 employees with this qualification may refer to their entire company as "Catena-X qualified" and will get the label "Qualified Advisory Provider". Alternatively, if more than 50% of a company's staff is qualified, it may equally refer to the entire company as "Catena-X qualified". Once a company meets the required number of qualified employees, it is automatically highlighted by Catena-X on the following list with an asterisk (*) and bold formatting: [Catena-X Qualified Advisor](https://catena-x.academy/catena-x-qualified-advisor/).
 To use the "Advisory Provider" logo, the company simply needs to contact the Catena-X Association and complete the corresponding application form.
 
-Any "Catena-X qualified" label has a validity of 12 months (for more details see [Qualification Process](https://catenax-ev.github.io/docs/next/operating-model/how-data-space-governance#qualification-process)).
+Any "Catena-X qualified" label has a validity of 12 months (for more details see [Qualification Process](./how-data-space-governance.md#qualification-process)).
 
 ### Scope of Labels (qualified/certified)
 
@@ -160,7 +162,7 @@ Any official Catena-X label can be downloaded from the [Catena-X repository](htt
 
 ## Regulatory Framework
 
-The Catena-X Regulatory Framework for data space operations outlines the non-technical requirements and responsibilities for all stakeholders involved in the Catena-X data ecosystem. It includes detailed information on data sovereignty, mandatory use case requirements, and other regulatory considerations that are relevant and mandatory to our activities. The Regulatory Framework is made up of individual components that each govern a specific layer of our data space operations. Find all the details about the Regulatory Framework [here](https://catenax-ev.github.io/docs/next/regulatory-framework/governance-framework).
+The Catena-X Regulatory Framework for data space operations outlines the non-technical requirements and responsibilities for all stakeholders involved in the Catena-X data ecosystem. It includes detailed information on data sovereignty, mandatory use case requirements, and other regulatory considerations that are relevant and mandatory to our activities. The Regulatory Framework is made up of individual components that each govern a specific layer of our data space operations. Find all the details about the Regulatory Framework [in this chapter](https://catenax-ev.github.io/docs/next/regulatory-framework/governance-framework).
 
 To understand the layers of our Regulatory Framework, Catena-X uses flight levels as a metaphor (see Figure Catena-X Governance Framework flight levels):
 

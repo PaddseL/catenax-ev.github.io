@@ -3,7 +3,7 @@ tags:
   - CAT/Value Added Services
 ---
 
-# CX-0135 Business Partner Company Certificate Management v2.3.1
+# CX-0135 Business Partner Company Certificate Management v2.3.2
 
 ## ABSTRACT
 
@@ -30,6 +30,7 @@ This standard is relevant to the following parties:
 The updated standard introduces several enhancements over the previous version. One of the key changes is the definition of an OpenAPI. This will allow companies to proactively request certificates and provide feedback on their status. For the notification's requests, the Industry Core Standard ([CX-0151:1.0.0 Industry Core: Basics](https://catenax-ev.github.io/docs/standards/CX-0151-IndustryCoreBasics)) has been adopted.
 
 Another important update involves a correction to the data model. The enclosedSiteBpn trait now accurately supports both BPNS and BPNA values, resolving a previous issue.
+
 Resolved an issue in the usage policy.
 
 These enhancements are designed to improve functionality and user experience, making the standard more reliable, efficient, and user-friendly.
@@ -664,55 +665,55 @@ After the Certificate Provider has created a Certificate Asset with the correspo
 The Certificate Consumer uses the above described PULL mechanism to get the certificate data.
 This reduces the Certificate Consumers need for active checks for missing certificates or certificate updates and enables access to the latest certificate data.
 
-##### 2.1.6 Usage Policy
+#### 2.1.6 POLICY CONSTRAINTS FOR DATA EXCHANGE
 
-All offers included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy that includes the Catena-X Data Exchange Governance document in version 1.0.
+In alignment with our commitment to data sovereignty, a specific framework governing the utilization of data within the Catena-X use cases has been outlined.
+As part of this data sovereignty framework, conventions for access policies, for usage policies and for the constraints contained in the policies have been specified in standard 'CX-0152 Policy Constraints for Data Exchange'.
+This standard document CX-0152 **MUST** be followed when providing services or apps for data sharing/consuming and when sharing or consuming data in the Catena-X ecosystem.
+What conventions are relevant for what roles named in [1.1 AUDIENCE & SCOPE](#11-audience--scope) is specified in the CX-0152 standard document as well.
+CX-0152 can be found in the [standard library](https://catenax-ev.github.io/docs/standards/overview).
+
+#### 2.1.7 Usage Policy
+
+All offers included in the EDC of a dataspace participant (APIs and Certificates) **MUST** contain a usage policy following the requirements referenced in paragraph [2.1.6](#216-policy-constraints-for-data-exchange).
 The use-case introduces the following usage purpose:
 
-- **`cx.ccm.base:1:`** *The exchanged business partner certificates are used for the purpose of verification and validation of the existence of a certification.*
+- **`cx.ccm.base:1:`** *The legal meaning is named in CX-0152 (see [standard library](https://catenax-ev.github.io/docs/standards/overview)).*
 
-Additional more general usage policies **MAY** be included, 
-but all the usage policies **MUST** contain the above usage purpose.
+Additional more general usage policies **MAY** be included, but all the usage policies **MUST** contain the above mentioned usage purpose as shown below.
 
 *Minimal example of a usage policy without contract reference:*
 ``` json
 {
   "@context": [
-    "http://www.w3.org/ns/odrl.jsonld",
-    {
-      "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
-      "cx-policy": "https://w3id.org/catenax/policy/"
-    }
+    "https://w3id.org/catenax/2025/9/policy/odrl.jsonld",
+    "https://w3id.org/catenax/2025/9/policy/context.jsonld"
   ],
-  "@type": "PolicyDefinition",
+  "@type": "Set",
   "@id": "CCMAPI-usage-policy-without-contract-reference",
-  "profile": "cx-policy:profile2405",
-  "policy": {
-    "@type": "Set",
-    "permission": [
-      {
-        "action": "use",
-        "constraint": {
-          "and": [
-            {
-              "leftOperand": "cx-policy:FrameworkAgreement",
-              "operator": "eq",
-              "rightOperand": "DataExchangeGovernance:1.0"
-            },
-            {
-              "leftOperand": "cx-policy:UsagePurpose",
-              "operator": "eq",
-              "rightOperand": "cx.ccm.base:1"
-            }
-          ]
-        }
+  "permission": [
+    {
+      "action": "use",
+      "constraint": {
+        "and": [
+          {
+            "leftOperand": "FrameworkAgreement",
+            "operator": "eq",
+            "rightOperand": "DataExchangeGovernance:1.0"
+          },
+          {
+            "leftOperand": "UsagePurpose",
+            "operator": "eq",
+            "rightOperand": "cx.ccm.base:1"
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
 }
 ```
 
-The constraint `{ "leftOperand": "cx-policy:ContractReference" }` **MUST** be included only if such a bilateral framework contract exists.
+The constraint `{ "leftOperand": "cx-policy:ContractReference" }` **MAY** be included if such a bilateral framework contract exists.
 
 ```json
 {
@@ -867,6 +868,7 @@ The internal reference id to request a certificate document.
 - [CX-0003:1.1 SAMM Aspect Meta Model](https://catenax-ev.github.io/docs/standards/CX-0003-SAMMSemanticAspectMetaModel)
 - [CX-0010:2.0 Business Partner Number](https://catenax-ev.github.io/docs/standards/CX-0010-BusinessPartnerNumber)
 - [CX-0151:1.0.0 Industry Core: Basics](https://catenax-ev.github.io/docs/standards/CX-0151-IndustryCoreBasics)
+- [CX-0152:1.0.0 Policy Constraints for Data Exchange](https://catenax-ev.github.io/docs/standards/overview)
 
 ### 4.2 NON-NORMATIVE REFERENCES
 

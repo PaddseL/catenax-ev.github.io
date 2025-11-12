@@ -6,6 +6,17 @@ sidebar_class_name: separator-top
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.0.0] - 2025-10-28
+
+### Added
+
+- Catena-X: Country Clearance List
+  - add **Ukraine** to "Allow List", including additional information
+  - add **Mexico** to "Allow List"
+  - add **Turkey** to "Allow List"
+- Contracting as a new chapter
+- New Version of Data Exchange Governance (Version of 30 SEPTEMBER 2025)
+
 ## [2.0.1]
 
 ### Added
