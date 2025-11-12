@@ -21,8 +21,8 @@ This standard is relevant to the following parties:
 
 >**Context regarding the naming of involved parties:**
 >The Catena-X operating model, as well as the EDC, uses the terms `Data Consumer` and `Data Provider`.
->The EDC uses these terms in regard to the parties that offer and consume EDC assets, while the operating model uses them in the context of information flow. 
->In some cases, these understandings align, but, for example, in the case of APIs (especially the certificate push mechanism), a mismatch can occur between the two. 
+>The EDC uses these terms in regard to the parties that offer and consume EDC assets, while the operating model uses them in the context of information flow.
+>In some cases, these understandings align, but, for example, in the case of APIs (especially the certificate push mechanism), a mismatch can occur between the two.
 >To avoid misunderstandings, we use the terms `Certificate Consumer` and `Certificate Provider` to explicitly prevent this ambiguity.
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
@@ -151,8 +151,8 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
 | 500       | Internal Server Error.                                                    |
 
 >**EDC Behavior**:
->At the moment (standard release 25.09), the open-source EDC will always proxy a `500` internal server error when it encounters a `4xx` or `5xx` HTTP response code from the API. 
->This means that in the case of a malformed request, while the API should return a `400` status code, the final EDC response that the consumer receives will be `500`. 
+>At the moment (standard release 25.09), the open-source EDC will always proxy a `500` internal server error when it encounters a `4xx` or `5xx` HTTP response code from the API.
+>This means that in the case of a malformed request, while the API should return a `400` status code, the final EDC response that the consumer receives will be `500`.
 >Until a future EDC update changes this behavior to proxy all status codes without changes, applications will need to be able to deal with this technical reality.
 
 The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
@@ -301,14 +301,15 @@ The Certificate Consumer may want to send a subsequent status message.
 }
 
 ```
+
 The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
 The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
 >**Push header `senderFeedbackUrl` explanation**:
 >This information is intended as a temporary solution to support the unique identification of multiple status endpoints across multiple EDCs belonging to one legal entity.
->The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs. 
->Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution. 
+>The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
+>Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution.
 >A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
 
 >**`documentID` spelling**:
@@ -352,7 +353,7 @@ Certificate has been received by Certificate Consumer and validation is in progr
 
 ##### 2.1.1.3.2 Company Certificate Status: Accepted
 
-Certificate is accepted. 
+Certificate is accepted.
 The documentId **MUST** match the documentId that was communicated by the certificate provider.
 The `locationBpns` can be a mix of sites and addresses.
 
@@ -504,7 +505,7 @@ Every dataspace participant may use their individual random uuid.
 
 > *This section is normative*
 
-The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly. 
+The HTTP endpoints introduced in chapter [2.1.1 API endpoints and resources](#211-API-endpoints-and-resources) **MUST NOT** be called from a business partner directly.
 Rather, it **MUST** be called with any CX-0018 compliant connector via dataspace protocol.
 Therefore, the Certificate Provider **MUST** offer an asset to expose an API for Certificate Consumer in the connector catalog.
 In turn, the Certificate Consumer **MAY** offer an asset to expose an API for the Certificate Provider in the connector catalog to push certificates to.
@@ -518,19 +519,22 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
 *Example*: it is possible to have these assets available next to one-another:
-- ```{ "dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```, 
+
+- ```{ "dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```,
 - ```{ "dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "2.0" }```
 
-since they either differ in the value of the version or the subject. 
+since they either differ in the value of the version or the subject.
 But it would not be possible to have two of the same subject and the same version.
 
 *Example that is not allowed:*
+
 - ```{"dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```,
 - ```{"dct:subject": { "@id": "cx-taxo:CompanyCertificateManagementNotificationApi" }, "cx-common:version": "3.0" }```
 
 It doesn't matter if the assets are offered in one or in different connectors, as long as they belong to the same BPNL this is not allowed.
 
 **Example Certificate Notification API**
+
 ```json
 {
   "@id": "81a0bdf8-732f-488e-bddb-1b9a78f0d1e0",
@@ -621,6 +625,7 @@ It doesn't matter if the assets are offered in one or in different connectors, a
 #### 2.1.5 MESSAGE FLOW EXPECTATIONS
 
 Certificate Provider & Certificate Consumer:
+
 - Certificate Provider **MUST** support at least one of the certificate provision mechanisms (push and/or pull mechanism)
 - Certificate Provider **MUST** expose company certificates in their catalog when using the pull mechanism.
 - Certificate Provider **MUST** set the correct access and usage policy on the certificate offer to allow consumption by Consumer(s) when using the pull mechanism.
@@ -636,6 +641,7 @@ Certificate Provider & Certificate Consumer:
 - Certificate Consumer **MAY** implement the [available endpoint](#2113-company-certificate-available) for the Certificate Provider to send availability notifications to, but **MUST** set the correct access and usage policy on the offer, when choosing to do so.
 
 Business Application Provider:
+
 - Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the status and available mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
@@ -644,7 +650,7 @@ Business Application Provider:
 ![PUSH Scenarios](images/certificate-push.svg)
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Consumer via EDC (Eclipse Data Connector) components.
-The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.  
+The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.
 The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a status message which is pushed to the provider.
 
 ##### 2.1.5.2 PULL Mechanism
@@ -652,9 +658,9 @@ The certificate is then processed by the Backend Certificate Consumer, which fin
 ![PULL Scenarios](images/certificate-pull.svg)
 
 The Certificate PULL Diagram describes the process of Consumer retrieving a certificate from a Provider via an EDC.
-It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog. 
-The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR). 
-The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate. 
+It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog.
+The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR).
+The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate.
 Once retrieved, the Backend Certificate Consumer processes the certificate and sends a status message to confirm the status.
 
 ##### 2.1.5.3 AVAILABLE notification followed by PULL mechanism
@@ -670,11 +676,12 @@ The use-case introduces the following usage purpose:
 
 - **`cx.ccm.base:1:`** *The exchanged business partner certificates are used for the purpose of verification and validation of the existence of a certification.*
 
-Additional more general usage policies **MAY** be included, 
+Additional more general usage policies **MAY** be included,
 but all the usage policies **MUST** contain the above usage purpose.
 
 *Minimal example of a usage policy without contract reference:*
-``` json
+
+```json
 {
   "@context": [
     "http://www.w3.org/ns/odrl.jsonld",
