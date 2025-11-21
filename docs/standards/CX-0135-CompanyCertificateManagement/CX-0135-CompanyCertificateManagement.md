@@ -43,7 +43,7 @@ The following company certificate use cases are supported in this release:
 
 1. Certificate Provider wants to publish a certificate / Certificate Consumer wants to discover a published certificate.
 2. Certificate Consumer wants to request a certificate from a specific Certificate Provider
-3. Certificate Consumer wants to notify a Certificate Provider of acceptance or rejection of a consumed certificate via a status message
+3. Certificate Consumer wants to notify a Certificate Provider of acceptance or rejection of a consumed certificate via a feedback message
 4. Certificate Provider wants to notify a Certificate Consumer of the availability of a new certificate asset
 
 For avoidance of the doubt, we are not replacing the existing publication semantic model.
@@ -91,7 +91,7 @@ See [API Message Flow](#215-message-flow-expectations) expectations for conforma
 
 > *This section and all its subsections are normative*
 
-Today, Certificate Consumer do not have a way to request certificates from a Certificate Provider. Also, Data Certificate Provider have no visibility on the status of a published certificate beyond the technical delivery. Finally, Certificate Provider do not have a standard mechanism to send new certificates to the Certificate Consumer when they become available.
+Today, Certificate Consumer do not have a way to request certificates from a Certificate Provider. Also, Data Certificate Provider have no visibility on the feedback of a published certificate beyond the technical delivery. Finally, Certificate Provider do not have a standard mechanism to send new certificates to the Certificate Consumer when they become available.
 
 Use cases to provide certificates (from who initiates communication, negotiation and data transfer):
 
@@ -100,7 +100,7 @@ Use cases to provide certificates (from who initiates communication, negotiation
 
 Use case to give feedback on the status for consumed certificates:
 
-- Certificate Consumer -> Certificate Provider: Company Certificate Status (Received, Accepted, or Rejected)
+- Certificate Consumer -> Certificate Provider: Company Certificate Feedback (Received, Accepted, or Rejected)
 
 Use case to notify about availability of certificates:
 
@@ -123,11 +123,12 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "e94eaa84-6fb3-4693-a189-201a20dfcecf",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -166,11 +167,12 @@ Case: Certificate Request Still In Process
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -188,11 +190,12 @@ This simplifies finding the correct offer for the requested certificate.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "07a71867-f05e-4b6a-9944-2531b854c40a",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -216,11 +219,12 @@ The error message is free text.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -251,20 +255,21 @@ The error message is free text.
 
 Certificate is pushed by the Certificate Provider to the Certificate Consumer.
 The enclosed BPNs can be a mix of sites and addresses.
-The Certificate Consumer may want to send a subsequent status message.
+The Certificate Consumer may want to send a subsequent feedback message.
 
 `POST /companycertificate/push`
 
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
-    "messageId": "8bf22334-97f2-42b4-afca-f68160707b83 ",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "businessPartnerNumber": "BPNL0000000001AB",
@@ -300,7 +305,6 @@ The Certificate Consumer may want to send a subsequent status message.
     }
   }
 }
-
 ```
 
 The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
@@ -308,7 +312,7 @@ The expected value **MUST** be a concrete path to the version 1 dataspace protoc
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
 >**Push header `senderFeedbackUrl` explanation**:
->This information is intended as a temporary solution to support the unique identification of multiple status endpoints across multiple EDCs belonging to one legal entity.
+>This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
 >The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
 >Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution.
 >A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
@@ -316,26 +320,28 @@ where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for
 >**`documentID` spelling**:
 > Please mind that in contrast to other requests the field `documentID` in the push notification request is spelled with a capital `D` due to the spelling in the [aspect model](#31-aspect-model-businesspartnercertificate).
 
-##### 2.1.1.3 Company Certificate Status
+##### 2.1.1.3 Company Certificate Feedback
 
 `POST /companycertificate/status`
 
 This API is used by the Certificate Consumer to give feedback on the status to the Certificate Provider, thus either accepting or rejecting the provided certificate.
 This is regardless of whether the certificate was [pulled](#2152-pull-mechanism) or [pushed](#2151-push-mechanism).
 
-##### 2.1.1.3.1 Company Certificate Status: Received
+##### 2.1.1.3.1 Company Certificate Feedback: Received
 
 Certificate has been received by Certificate Consumer and validation is in progress.
 
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000002",
@@ -352,7 +358,7 @@ Certificate has been received by Certificate Consumer and validation is in progr
 }
 ```
 
-##### 2.1.1.3.2 Company Certificate Status: Accepted
+##### 2.1.1.3.2 Company Certificate Feedback: Accepted
 
 Certificate is accepted.
 The documentId **MUST** match the documentId that was communicated by the certificate provider.
@@ -361,12 +367,14 @@ The `locationBpns` can be a mix of sites and addresses.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000001",
@@ -383,19 +391,21 @@ The `locationBpns` can be a mix of sites and addresses.
 }
 ```
 
-##### 2.1.1.3.3 Company Certificate Status: Rejected
+##### 2.1.1.3.3 Company Certificate Feedback: Rejected
 
 Certificate is rejected by the Certificate Consumer with one or multiple reasons.
 
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "f67b9853-b714-4427-a8f3-4c53a9822da0",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000003",
@@ -461,12 +471,14 @@ The Certificate Consumer may want to consume the certificate via the pull mechan
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Available:1.0.0",
-    "messageId": "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000001",
@@ -515,7 +527,7 @@ The property [[type]](http://purl.org/dc/terms/type) **MUST** reference the name
 
 | **Type**       | **Subject**                                         | **Version** | **Description** |
 |----------------|-----------------------------------------------------|-------------|-----------------|
-| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateManagementNotificationApi | 3.0         | Offers *Certificate Notification API* for [requesting](#2111-company-certificate-request) and [pushing](#2112-company-certificate-push) certificates as well as sending feedback on the [status](#2113-company-certificate-status) for provided certificates and receiving [availability](#2114-company-certificate-available) notifications. |
+| cx-taxo:CCMAPI | cx-taxo:CompanyCertificateManagementNotificationApi | 3.0         | Offers *Certificate Notification API* for [requesting](#2111-company-certificate-request) and [pushing](#2112-company-certificate-push) certificates as well as sending [feedback](#2113-company-certificate-feedback) on the status for provided certificates and receiving [availability](#2114-company-certificate-available) notifications. |
 
 There **MUST** only be one unique asset per API (subject and version) across all connectors of one BPNL.
 
@@ -550,7 +562,15 @@ It doesn't matter if the assets are offered in one or in different connectors, a
     "dct:description": "Offers Certificate Notification API for requesting and pushing certificates as well as sending feedback on the status for provided certificates and receiving availability notifications.",
     "cx-common:version": "3.0"
   },
-  "dataAddress": {},
+  "dataAddress": {
+      "@type": "DataAddress",
+      "type": "HttpData",
+      "baseUrl": "https://backend-base-url/certificate-notification-api-base-path",
+      "proxyQueryParams": "false",
+      "proxyPath": "true",
+      "proxyMethod": "false",
+      "proxyBody": "true"
+    },
   "@context": {
     "dct": "http://purl.org/dc/terms/",
     "cx-taxo": "https://w3id.org/catenax/taxonomy#",
@@ -643,7 +663,7 @@ Certificate Provider & Certificate Consumer:
 
 Business Application Provider:
 
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the status and available mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the feedback and available mechanism.
 - Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
@@ -652,7 +672,7 @@ Business Application Provider:
 
 The Certificate PUSH Diagram describes the secure transmission of certificates from a Backend Certificate Provider to a Backend Certificate Consumer via EDC (Eclipse Data Connector) components.
 The process starts with a contract agreement for a Notification Asset, followed by the provider pushing the certificate to the provided endpoint in the asset.
-The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a status message which is pushed to the provider.
+The certificate is then processed by the Backend Certificate Consumer, which finalizes the workflow by generating a feedback message which is pushed to the provider.
 
 ##### 2.1.5.2 PULL Mechanism
 
@@ -662,7 +682,7 @@ The Certificate PULL Diagram describes the process of Consumer retrieving a cert
 It begins with the provider creating a Certificate Asset with corresponding contract definition in the EDC Catalog.
 The Consumer searches the catalog using specific filters, initiates a contract negotiation, and retrieves the Endpoint Data Reference (EDR).
 The Data Plane then facilitates secure data transfer, allowing the consumer to pull the certificate.
-Once retrieved, the Backend Certificate Consumer processes the certificate and sends a status message to confirm the status.
+Once retrieved, the Backend Certificate Consumer processes the certificate and sends a feedback message to confirm the status.
 
 ##### 2.1.5.3 AVAILABLE notification followed by PULL mechanism
 
@@ -719,7 +739,7 @@ Additional more general usage policies **MAY** be included, but all the usage po
 }
 ```
 
-The constraint `{ "leftOperand": "cx-policy:ContractReference" }` **MAY** be included if such a bilateral framework contract exists.
+The constraint `{ "leftOperand": "cx-policy:ContractReference" }` **MUST** be included only if such a bilateral framework contract exists.
 
 ```json
 {

@@ -12,22 +12,68 @@ tags:
 components:
   schemas:
     Header:
-      allOf:
-        - $ref: 'https://raw.githubusercontent.com/eclipse-tractusx/sldt-semantic-models/refs/heads/main/io.catenax.shared.message_header/3.0.0/gen/MessageHeaderAspect-schema.json#/properties/header'
-        - type: object
-          required:
-            - context
-          properties:
-            context:
-              type: string
-              description: The context defines the type of company certificate message
-              examples:
-                - CompanyCertificateManagement-CCMAPI-Request:1.0.0
-              enum:
-              - CompanyCertificateManagement-CCMAPI-Request:1.0.0
-              - CompanyCertificateManagement-CCMAPI-Push:1.0.0
-              - CompanyCertificateManagement-CCMAPI-Status:1.0.0
-              - CompanyCertificateManagement-CCMAPI-Available:1.0.0
+      description: Characteristic describing the common shared aspect Message Header
+      required:
+      - context
+      - messageId
+      - receiverBpn
+      - senderBpn
+      - sentDateTime
+      - version
+      type: object
+      properties:
+        messageId:
+          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          type: string
+          description: A UUIDv4 to uniquely identify a message
+          examples:
+            - urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
+            - e4da568b-8cf1-4f5f-a96a-cf26265b2c72
+        context:
+          type: string
+          description: The context defines the type of company certificate message
+          examples:
+            - CompanyCertificateManagement-CCMAPI-Request:1.0.0
+          enum:
+          - CompanyCertificateManagement-CCMAPI-Request:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Push:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Status:1.0.0
+          - CompanyCertificateManagement-CCMAPI-Available:1.0.0
+        sentDateTime:
+          type: string
+          description: Time zone aware timestamp holding the date and the time the
+            message was sent by the sending party. The value MUST be formatted according
+            to the ISO 8601 standard
+          format: date-time
+          examples:
+            - 2024-10-07T10:15:00Z
+        senderBpn:
+          pattern: "^BPNL[a-zA-Z0-9]{12}$"
+          type: string
+          description: The Business Partner Number of the sending party
+          examples:
+            - BPNL0000000001AB
+        receiverBpn:
+          pattern: "^BPNL[a-zA-Z0-9]{12}$"
+          type: string
+          description: The Business Partner Number of the receiving party
+          examples:
+            - BPNL0000000002CD
+        relatedMessageId:
+          pattern: "^(?:urn:uuid:)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          type: string
+          description: Unique ID identifying a message somehow related to the current
+            one
+          examples:
+            - urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72
+            - e4da568b-8cf1-4f5f-a96a-cf26265b2c72
+        version:
+          pattern: "^(0|[1-9][0-9]*).(0|[1-9][0-9]*).(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(.[0-9A-Za-z-]+)*)?([0-9A-Za-z-]+(.[0-9A-Za-z-]+)*)?$"
+          type: string
+          description: The unique identifier of the aspect model defining the structure
+            and the semantics of the message's header
+          examples:
+            - 3.1.0
 
     FeedbackUrlHeader:
       allOf:
@@ -36,7 +82,7 @@ components:
           properties:
             senderFeedbackUrl:
               type: string
-              description: URL of the EDC DSP endpoint to send feedback on the status to
+              description: URL of the EDC DSP endpoint to send feedback to
               examples:
                 - https://domain.tld/path/to/edc/api/v1/dsp
 
@@ -196,7 +242,7 @@ components:
         - content
       properties:
         header:
-          $ref: '#/components/schemas/Header'
+          $ref: '#/components/schemas/FeedbackUrlHeader'
         content:
           type: object
           required:
@@ -230,7 +276,7 @@ components:
         - content
       properties:
         header:
-          $ref: '#/components/schemas/Header'
+          $ref: '#/components/schemas/FeedbackUrlHeader'
         content:
           type: object
           required:
@@ -253,11 +299,12 @@ components:
       summary: A response for a successfully completed certificate request process
       value:
         header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
           context: "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
           receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
           version: "3.1.0"
         content:
           requestStatus: "COMPLETED"
@@ -267,11 +314,12 @@ components:
       summary: A response for a rejected certificate request process
       value:
         header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
           context: "CompanyCertificateManagement-CCMAPI-Request:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
           receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
           version: "3.1.0"
         content:
           requestStatus: "REJECTED"
@@ -283,35 +331,39 @@ components:
               locationErrors:
                 - message: "Site BPNS000000000003 is unknown"
 
-    CertificateAcceptedStatus:
-      summary: Consumer accepts received certificate
-      value:
-        header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
-          context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
-          receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
-          version: "3.1.0"
-        content:
-          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-          certificateStatus: "ACCEPTED"
-          locationBpns:
-            - "BPNS000000000003"
-
     CertificateReceivedStatus:
       summary: Consumer received certificate
       value:
         header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
           context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
           receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
           version: "3.1.0"
+          senderFeedbackUrl: "https://domain.tld/path/to/edc/api/v1/dsp"
         content:
           documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
           certificateStatus: "RECEIVED"
+          locationBpns:
+            - "BPNS000000000003"
+
+    CertificateAcceptedStatus:
+      summary: Consumer accepts received certificate
+      value:
+        header:
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
+          receiverBpn: "BPNL0000000002CD"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
+          version: "3.1.0"
+          senderFeedbackUrl: "https://domain.tld/path/to/edc/api/v1/dsp"
+        content:
+          documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          certificateStatus: "ACCEPTED"
           locationBpns:
             - "BPNS000000000003"
 
@@ -319,12 +371,14 @@ components:
       summary: Consumer rejected received certificate
       value:
         header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
           context: "CompanyCertificateManagement-CCMAPI-Status:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
           receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
           version: "3.1.0"
+          senderFeedbackUrl: "https://domain.tld/path/to/edc/api/v1/dsp"
         content:
           documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
           certificateStatus: "REJECTED"
@@ -342,12 +396,14 @@ components:
       summary: Provider notifies consumer that a certificate is available
       value:
         header:
-          senderBpn: "BPNL0000000001AB"
-          messagedId: "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
+          messagedId: "urn:uuid:3b4edc05-e214-47a1-b0c2-1d831cdd9ba9"
           context: "CompanyCertificateManagement-CCMAPI-Available:1.0.0"
+          sentDateTime: "2024-10-07T10:15:00Z"
+          senderBpn: "BPNL0000000001AB"
           receiverBpn: "BPNL0000000002CD"
-          sentDateTime: "2025-05-04T00:00:00-07:00Z"
+          relatedMessageId: "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72"
           version: "3.1.0"
+          senderFeedbackUrl: "https://domain.tld/path/to/edc/api/v1/dsp"
         content:
           documentId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
           certificateType: "iso9001"
@@ -387,7 +443,7 @@ paths:
         '400':
           description: Request malformed and can not be processed
         '500':
-          description: Internal server error has occured
+          description: Internal server error
 
   /companycertificate/push:
     post:
@@ -403,6 +459,8 @@ paths:
       responses:
         '200':
           description: Notification processed successfully
+        '500':
+          description: Internal server error
 
   /companycertificate/status:
     post:
@@ -425,6 +483,8 @@ paths:
       responses:
         '200':
           description: Status updated successfully
+        '500':
+          description: Internal server error
 
   /companycertificate/available:
     post:
@@ -437,6 +497,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CertificateAvailable'
+            examples:
+              CertificateAvailable:
+                $ref: '#/components/examples/CertificateAvailable'
       responses:
         '200':
           description: Notification processed successfully
