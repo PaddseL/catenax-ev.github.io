@@ -122,11 +122,12 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "e94eaa84-6fb3-4693-a189-201a20dfcecf",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -165,11 +166,12 @@ Case: Certificate Request Still In Process
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "b53a4682-6cb5-48f3-b3fa-0bf20718dc52",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -187,11 +189,12 @@ This simplifies finding the correct offer for the requested certificate.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "07a71867-f05e-4b6a-9944-2531b854c40a",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -215,11 +218,12 @@ The error message is free text.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Request:1.0.0",
-    "messageId": "0ee9c20f-a55e-43c9-9a3f-0cb23d4f134d",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "version": "3.1.0"
   },
   "content": {
@@ -257,13 +261,14 @@ The Certificate Consumer may want to send a subsequent status message.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
-    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Push:1.0.0",
-    "messageId": "8bf22334-97f2-42b4-afca-f68160707b83 ",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "businessPartnerNumber": "BPNL0000000001AB",
@@ -299,7 +304,6 @@ The Certificate Consumer may want to send a subsequent status message.
     }
   }
 }
-
 ```
 
 The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
@@ -329,12 +333,14 @@ Certificate has been received by Certificate Consumer and validation is in progr
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "f2cd0df7-5cdb-4a09-b273-c7cfbceccf2d",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000002",
@@ -360,12 +366,14 @@ The `locationBpns` can be a mix of sites and addresses.
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "a6dca795-a1ae-4e8d-9e41-b82ebe9ebd5b",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000001",
@@ -389,12 +397,14 @@ Certificate is rejected by the Certificate Consumer with one or multiple reasons
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Status:1.0.0",
-    "messageId": "f67b9853-b714-4427-a8f3-4c53a9822da0",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000003",
@@ -460,12 +470,14 @@ The Certificate Consumer may want to consume the certificate via the pull mechan
 ```json
 {
   "header": {
-    "senderBpn": "BPNL0000000001AB",
+    "messageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
     "context": "CompanyCertificateManagement-CCMAPI-Available:1.0.0",
-    "messageId": "3b4edc05-e214-47a1-b0c2-1d831cdd9ba9",
+    "sentDateTime": "2024-10-07T10:15:00Z",
+    "senderBpn": "BPNL0000000001AB",
     "receiverBpn": "BPNL0000000002CD",
-    "sentDateTime": "2025-05-04T00:00:00-07:00",
-    "version": "3.1.0"
+    "relatedMessageId": "urn:uuid:e4da568b-8cf1-4f5f-a96a-cf26265b2c72",
+    "version": "3.1.0",
+    "senderFeedbackUrl": "https://domain.tld/path/to/edc/api/v1/dsp"
   },
   "content": {
     "documentId": "00000000-0000-0000-0000-000000000001",
@@ -549,7 +561,15 @@ It doesn't matter if the assets are offered in one or in different connectors, a
     "dct:description": "Offers Certificate Notification API for requesting and pushing certificates as well as sending feedback on the status for provided certificates and receiving availability notifications.",
     "cx-common:version": "3.0"
   },
-  "dataAddress": {},
+  "dataAddress": {
+      "@type": "DataAddress",
+      "type": "HttpData",
+      "baseUrl": "https://backend-base-url/certificate-notification-api-base-path",
+      "proxyQueryParams": "false",
+      "proxyPath": "true",
+      "proxyMethod": "false",
+      "proxyBody": "true"
+    },
   "@context": {
     "dct": "http://purl.org/dc/terms/",
     "cx-taxo": "https://w3id.org/catenax/taxonomy#",
