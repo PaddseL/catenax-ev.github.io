@@ -112,7 +112,8 @@ This section introduces the certificate management notification API which is fur
 #### 2.1.1 API endpoints and resources
 
 > [!WARNING]
-> **`senderFeedbackUrl` explanation**:
+> **`senderFeedbackUrl` explanation**
+>
 > This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
 > The typical way to implement such differentiation in the Catena-X data space would be to provide additional,distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
 > Since the current changes are implemented as a non-breaking standard patch, the `senderFeedbackUrl` remains an intermediate solution.
@@ -121,6 +122,7 @@ This section introduces the certificate management notification API which is fur
 
 > [!CAUTION]
 > **`documentId` explanation**
+>
 > The `documentId` in the payloads of the Request, Feedback, and Available notifications does not refer to the `documentID` of the certificate.
 > Instead, it references the unique ID of the EDC asset of the certificate.
 > This is different for the Push notification, where the certificate itself is in the payload and therefore the `documentID` of the certificate is referenced.
@@ -326,6 +328,7 @@ where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for
 
 > [!NOTE]
 > **`documentID` spelling**
+>
 > Please note that in contrast to other requests, the field `documentID` in the push notification request is spelled with a capital `D` due to the spelling in the [aspect model](#31-aspect-model-businesspartnercertificate)
 > and refers to the ID of the document of the certificate, not the unique ID of the EDC asset of the certificate.
 
