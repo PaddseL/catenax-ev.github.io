@@ -111,8 +111,8 @@ This section introduces the certificate management notification API which is fur
 
 #### 2.1.1 API endpoints and resources
 
-> [!WARNING] 
-> ** `senderFeedbackUrl` explanation**:
+> [!WARNING]
+> **`senderFeedbackUrl` explanation**:
 > This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
 > The typical way to implement such differentiation in the Catena-X data space would be to provide additional,distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
 > Since the current changes are implemented as a non-breaking standard patch, the `senderFeedbackUrl` remains an intermediate solution.
