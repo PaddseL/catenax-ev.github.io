@@ -19,11 +19,11 @@ This standard is relevant to the following parties:
 - Certificate Provider: Dataspace Participant who provides certificates.
 - Business Application Provider
 
->**Context regarding the naming of involved parties:**
->The Catena-X operating model, as well as the EDC, uses the terms `Data Consumer` and `Data Provider`.
->The EDC uses these terms in regard to the parties that offer and consume EDC assets, while the operating model uses them in the context of information flow.
->In some cases, these understandings align, but, for example, in the case of APIs (especially the certificate push mechanism), a mismatch can occur between the two.
->To avoid misunderstandings, we use the terms `Certificate Consumer` and `Certificate Provider` to explicitly prevent this ambiguity.
+> **Context regarding the naming of involved parties:**
+> The Catena-X operating model, as well as the EDC, uses the terms `Data Consumer` and `Data Provider`.
+> The EDC uses these terms in regard to the parties that offer and consume EDC assets, while the operating model uses them in the context of information flow.
+> In some cases, these understandings align, but, for example, in the case of APIs (especially the certificate push mechanism), a mismatch can occur between the two.
+> To avoid misunderstandings, we use the terms `Certificate Consumer` and `Certificate Provider` to explicitly prevent this ambiguity.
 
 ## COMPARISON WITH THE PREVIOUS VERSION OF THE STANDARD
 
@@ -112,6 +112,20 @@ This section introduces the certificate management notification API which is fur
 
 #### 2.1.1 API endpoints and resources
 
+> [!WARNING] 
+> ** `senderFeedbackUrl` explanation**:
+> This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
+> The typical way to implement such differentiation in the Catena-X data space would be to provide additional,distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
+> Since the current changes are implemented as a non-breaking standard patch, the `senderFeedbackUrl` remains an intermediate solution.
+> A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
+> This attribute will be deprecated in future releases and it will no longer be possible to use it for specifying the endpoint to receive feedback on.
+
+> [!CAUTION]
+> **`documentId` explanation**
+> The `documentId` in the payloads of the Request, Feedback, and Available notifications does not refer to the `documentID` of the certificate.
+> Instead, it references the unique ID of the EDC asset of the certificate.
+> This is different for the Push notification, where the certificate itself is in the payload and therefore the `documentID` of the certificate is referenced.
+
 ##### 2.1.1.1 Company Certificate Request
 
 The Certificate Consumer is requesting a specific certificate from the Certificate Provider.
@@ -152,10 +166,10 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
 | 400       | Request malformed.                                                        |
 | 500       | Internal Server Error.                                                    |
 
->**EDC Behavior**:
->At the moment (standard release 25.09), the open-source EDC will always proxy a `500` internal server error when it encounters a `4xx` or `5xx` HTTP response code from the API.
->This means that in the case of a malformed request, while the API should return a `400` status code, the final EDC response that the consumer receives will be `500`.
->Until a future EDC update changes this behavior to proxy all status codes without changes, applications will need to be able to deal with this technical reality.
+> **EDC Behavior**:
+> At the moment (standard release 25.09), the open-source EDC will always proxy a `500` internal server error when it encounters a `4xx` or `5xx` HTTP response code from the API.
+> This means that in the case of a malformed request, while the API should return a `400` status code, the final EDC response that the consumer receives will be `500`.
+> Until a future EDC update changes this behavior to proxy all status codes without changes, applications will need to be able to deal with this technical reality.
 
 The detailed response bodies for HTTP Code 200 are described in 2.1.1.1.2 and following.
 HTTP Status Codes 202, 400 and 500 do not come with a response body.
@@ -205,7 +219,7 @@ This simplifies finding the correct offer for the requested certificate.
 }
 ```
 
->**`documentId` explanation**:
+> **`documentId` explanation**:
 > The reasoning why a documentId (the unique ID of EDC asset of the certificate) is to be returned (and not for example the certificate as a return payload) is,
 > so that the Certificate Provider can specify (for each certificate) a dedicated contract offer, and thus use different usage policies for the certificates and API(s).
 > That way the Certificate Provider has all options available in terms of data sovereignty and full access control on an EDC (contract based) level.
@@ -311,21 +325,21 @@ The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feed
 The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
 where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
 
->**Push header `senderFeedbackUrl` explanation**:
->This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
->The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
->Since the current changes are implemented as a non-breaking standard patch, the senderFeedbackUrl remains an intermediate solution.
->A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
-
->**`documentID` spelling**:
-> Please mind that in contrast to other requests the field `documentID` in the push notification request is spelled with a capital `D` due to the spelling in the [aspect model](#31-aspect-model-businesspartnercertificate).
+> [!NOTE]
+> **`documentID` spelling**
+> Please note that in contrast to other requests, the field `documentID` in the push notification request is spelled with a capital `D` due to the spelling in the [aspect model](#31-aspect-model-businesspartnercertificate)
+> and refers to the ID of the document of the certificate, not the unique ID of the EDC asset of the certificate.
 
 ##### 2.1.1.3 Company Certificate Feedback
 
 `POST /companycertificate/status`
 
-This API is used by the Certificate Consumer to give feedback on the status to the Certificate Provider, thus either accepting or rejecting the provided certificate.
-This is regardless of whether the certificate was [pulled](#2152-pull-mechanism) or [pushed](#2151-push-mechanism).
+This API is used by the Certificate Consumer to provide feedback on the status to the Certificate Provider, either accepting or rejecting the provided certificate.
+This applies regardless of whether the certificate was [pulled](#2152-pull-mechanism) or [pushed](#2151-push-mechanism).
+
+If the certificate being given feedback on was consumed using the pull mechanism, the `documentId` in the payload must refer to the unique ID of the EDC asset of the certificate.
+
+When the push mechanism was used, the `relatedMessageId` must be set to the `messageId` of the push notification for which feedback is being provided.
 
 ##### 2.1.1.3.1 Company Certificate Feedback: Received
 
@@ -663,8 +677,8 @@ Certificate Provider & Certificate Consumer:
 
 Business Application Provider:
 
-- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the feedback and available mechanism.
-- Business Application Provider **MUST** offer the push mechanism option to the Certificate Consumer application user, if the Certificate Consumer supports the push mechanism.
+- Business Application Provider **MUST** implement all features of the Certificate Notification API, including the support of the push, the pull and also the feedback and the available mechanism.
+- Business Application Provider **MUST** offer the push mechanism option to the application user, if the Certificate Consumer supports the push mechanism.
 
 ##### 2.1.5.1 PUSH Mechanism
 
