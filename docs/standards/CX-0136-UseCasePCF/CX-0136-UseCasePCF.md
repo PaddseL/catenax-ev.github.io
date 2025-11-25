@@ -4,12 +4,12 @@ tags:
   - UC/PCF
 ---
 
-# CX-0136 Use Case PCF 2.2.1
+# CX-0136 Use Case PCF 2.2.0
 
 :::warning
 
 The following standards was identified as not fully **backward compatibility with CX-Jupiter**  and was allowed to apply the required changes through a **fast-track process** to be included in the CX-Saturn release.
-These exceptions will be released together with the  *CX-Saturn Go-Live** of all other standards on **25.11**.
+These exceptions will be released on the **05th of January 2026**.
 
 **Therefore, this version of the standard is not eligible for certification yet**
 
