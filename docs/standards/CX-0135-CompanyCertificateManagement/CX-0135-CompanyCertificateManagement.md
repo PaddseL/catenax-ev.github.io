@@ -3,7 +3,7 @@ tags:
   - CAT/Value Added Services
 ---
 
-# CX-0135 Business Partner Company Certificate Management v2.3.2
+# CX-0135 Business Partner Company Certificate Management v2.3.3
 
 ## ABSTRACT
 
