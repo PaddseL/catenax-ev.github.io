@@ -3,7 +3,7 @@ tags:
   - CAT/Value Added Services
 ---
 
-# CX-0135 Business Partner Company Certificate Management v2.3.1
+# CX-0135 Business Partner Company Certificate Management v2.3.3
 
 ## ABSTRACT
 
@@ -30,6 +30,7 @@ This standard is relevant to the following parties:
 The updated standard introduces several enhancements over the previous version. One of the key changes is the definition of an OpenAPI. This will allow companies to proactively request certificates and provide feedback on their status. For the notification's requests, the Industry Core Standard ([CX-0151:1.0.0 Industry Core: Basics](https://catenax-ev.github.io/docs/standards/CX-0151-IndustryCoreBasics)) has been adopted.
 
 Another important update involves a correction to the data model. The enclosedSiteBpn trait now accurately supports both BPNS and BPNA values, resolving a previous issue.
+
 Resolved an issue in the usage policy.
 
 These enhancements are designed to improve functionality and user experience, making the standard more reliable, efficient, and user-friendly.
@@ -115,7 +116,7 @@ This section introduces the certificate management notification API which is fur
 > **`senderFeedbackUrl` explanation**
 >
 > This information is intended as a temporary solution to support the unique identification of multiple endpoints across multiple EDCs belonging to one legal entity.
-> The typical way to implement such differentiation in the Catena-X data space would be to provide additional,distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
+> The typical way to implement such differentiation in the Catena-X data space would be to provide additional, distinguishing attributes to the EDC assets to enable an automated search mechanism via the EDC discovery service and EDC catalogs.
 > Since the current changes are implemented as a non-breaking standard patch, the `senderFeedbackUrl` remains an intermediate solution.
 > A future change is required in that regard, especially when considering the deprecation of the v1 DSP endpoint in favor of an upcoming EDC `.well-known` endpoint that supports multiple DSP versions.
 > This attribute will be deprecated in future releases and it will no longer be possible to use it for specifying the endpoint to receive feedback on.
@@ -322,9 +323,9 @@ The Certificate Consumer may want to send a subsequent feedback message.
 }
 ```
 
-The ´senderFeedbackUrl´ specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
+The `senderFeedbackUrl` specifies, where the Certificate Provider expects feedback on the status from the Certificate Consumer.
 The expected value **MUST** be a concrete path to the version 1 dataspace protocol endpoint,
-where a data offer for an asset of type cx-taxo:CCMAPI **MUST** be available for the Certificate Consumer.
+where a data offer for an asset of type `cx-taxo:CCMAPI` **MUST** be available for the Certificate Consumer.
 
 > [!NOTE]
 > **`documentID` spelling**
