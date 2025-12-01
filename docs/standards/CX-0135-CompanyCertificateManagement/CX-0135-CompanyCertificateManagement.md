@@ -3,7 +3,7 @@ tags:
   - CAT/Value Added Services
 ---
 
-# CX-0135 Business Partner Company Certificate Management v2.3.3
+# CX-0135 Business Partner Company Certificate Management v2.4.0
 
 ## ABSTRACT
 
@@ -158,6 +158,10 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
   }
 }
 ```
+
+> **`locationBpns` explanation**:
+> When a certificate is requested for multiple locations specified in `locationBpns`, the returned certificate's `enclosedSites` attribute may not cover all requested locations.
+> However, it should include at least one of the specified locations.
 
 ##### 2.1.1.1.1 HTTP Response Codes
 
