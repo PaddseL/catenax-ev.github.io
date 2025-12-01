@@ -159,6 +159,10 @@ The Certificate Consumer is requesting a specific certificate from the Certifica
 }
 ```
 
+> **`locationBpns` explanation**:
+> When a certificate is requested for multiple locations specified in `locationBpns`, the returned certificate's `enclosedSites` attribute may not cover all requested locations.
+> However, it should include at least one of the specified locations.
+
 ##### 2.1.1.1.1 HTTP Response Codes
 
 | HTTP Code | Description                                                               |
